@@ -4,7 +4,7 @@ Content Management System Justforyou is dashboard for manage the content,member 
 
 ## Demo
 
-<!-- https://movie-listapp.netlify.app/ -->
+<!-- https://movie-listapp.netlify.app/test -->
 
 ## Preview
 
