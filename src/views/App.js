@@ -15,6 +15,9 @@ import {
   getUserById,
   getSearchUsers,
 } from '../actions/userAction';
+import SiderBar from './Dashboard/Components/SiderBar';
+import Main from './Dashboard/Components/Main';
+import NavBar from './Dashboard/Components/NavBar';
 function App(props) {
   const {
     state,
@@ -75,10 +78,10 @@ function App(props) {
   // console.log(products, 'products');
   console.log(users, 'users');
   return (
-    <div className='w-screen h-screen flex'>
-      <div className='m-auto'>
-        <h1>hello world</h1>
-      </div>
+    <div class='antialiased bg-gray-50 dark:bg-gray-900'>
+      <NavBar />
+      <SiderBar />
+      <Main />
     </div>
   );
 }
