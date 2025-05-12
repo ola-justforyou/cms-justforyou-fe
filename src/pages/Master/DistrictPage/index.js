@@ -1,19 +1,92 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FormDistrict from "./FormDistrict";
+import { fetchDistricts } from "../../../actions/regionAction/districtAction";
+import { fetchCities } from "../../../actions/regionAction/cityAction";
+import { fetchProvinces } from "../../../actions/regionAction/provinceAction";
+import { connect, useDispatch } from "react-redux";
+import ModalDelete from "../../../components/Modals/ModalDelete";
 
-const DistrictPage = () => {
-  const initialState = {
-    id: "",
-    name: "",
+const DistrictPage = (props) => {
+  const {
+    districts,
+    cities,
+    provinces,
+    fetchDistricts,
+    fetchCities,
+    fetchProvinces,
+    isLoading,
+    isLoadingCity,
+    isLoadingProvince,
+  } = props;
+  const [perPage, setPerPage] = useState(20);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handlePerPageChange = (value) => {
+    setPerPage(value);
+    setCurrentPage(1);
   };
+
+  const initialState = {
+    id: "1805",
+    name: "",
+    city_id: "1805",
+    province_id: "18",
+  };
+  const dispatch = useDispatch();
   const [isShowModal, setIsShowModal] = useState(false);
+  const [isShowModalDelete, setIsShowModalDelete] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [filterText, setFilterText] = useState("");
+  const [items, setItems] = useState(districts);
   const [formState, setFormState] = useState(initialState);
+
+  const totalPages = Math.ceil(items?.length / perPage);
+  const paginatedItems = items?.slice(
+    (currentPage - 1) * perPage,
+    currentPage * perPage
+  );
   const openModal = () => {
+    setFormState(initialState);
     setIsShowModal(true);
   };
+
   const closeModal = () => {
+    setFormState(initialState);
     setIsShowModal(false);
+    setIsEdit(false);
   };
+  const openModalDelete = () => {
+    setFormState(initialState);
+    setIsShowModalDelete(true);
+  };
+  const closeModalDelete = () => {
+    setFormState(initialState);
+    setIsShowModalDelete(false);
+  };
+  const handleDelete = () => {
+    setIsShowModalDelete(false);
+  };
+  const handleEdit = (item) => {
+    setFormState(item);
+    setIsEdit(true);
+    setIsShowModal(true);
+  };
+  useEffect(() => {
+    fetchDistricts(formState?.city_id);
+  }, []);
+  useEffect(() => {
+    if (districts) {
+      const filteredItems = districts?.filter((item) => {
+        const isTextMatch =
+          item?.id?.toLowerCase()?.includes(filterText?.toLowerCase()) ||
+          item?.name?.toLowerCase()?.includes(filterText?.toLowerCase());
+
+        return isTextMatch;
+      });
+      setItems(filteredItems);
+    }
+  }, [districts, filterText]);
+
   return (
     <div class="page-wrapper">
       <div class="page-header d-print-none">
@@ -25,15 +98,49 @@ const DistrictPage = () => {
             </div>
             <div class="col-auto ms-auto d-print-none">
               <div class="btn-list">
-                <a href="#" class="btn btn-primary btn-5 d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-report" onclick={openModal}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
+                <a
+                  href="#"
+                  class="btn btn-primary btn-5 d-none d-sm-inline-block"
+                  data-bs-toggle="modal"
+                  data-bs-target="#modal-form"
+                  onclick={openModal}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="icon icon-2"
+                  >
                     <path d="M12 5l0 14" />
                     <path d="M5 12l14 0" />
                   </svg>
                   Tambah Kecamatan
                 </a>
-                <a href="#" class="btn btn-primary btn-6 d-sm-none btn-icon" data-bs-toggle="modal" data-bs-target="#modal-report" aria-label="Create new report">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
+                <a
+                  href="#"
+                  class="btn btn-primary btn-6 d-sm-none btn-icon"
+                  data-bs-toggle="modal"
+                  data-bs-target="#modal-form"
+                  onclick={openModal}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="icon icon-2"
+                  >
                     <path d="M12 5l0 14" />
                     <path d="M5 12l14 0" />
                   </svg>
@@ -49,26 +156,43 @@ const DistrictPage = () => {
             <div class="col-12">
               <div class="card">
                 <div class="card-table">
-                  <div class="card-header">
+                  <div class="card-header ">
                     <div class="row w-full">
-                      <div class="col">
+                      <div class="col-md-9 col-12">
                         <h3 class="card-title mb-0">Kecamatan</h3>
-                        <p class="text-secondary m-0">Master wilayah Kecamatan di justforyou</p>
+                        <p class="text-secondary m-0">
+                          Master wilayah Kecamatan di justforyou
+                        </p>
                       </div>
-                      <div class="col-md-auto col-sm-12">
-                        <div class="ms-auto d-flex flex-wrap btn-list">
-                          <div class="input-group input-group-flat w-auto">
-                            <span class="input-group-text">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                                <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
-                                <path d="M21 21l-6 -6" />
-                              </svg>
-                            </span>
-                            <input id="advanced-table-search" type="text" class="form-control" autocomplete="off" />
-                            <span class="input-group-text">
-                              <kbd>ctrl + K</kbd>
-                            </span>
-                          </div>
+                      <div className="col-md-3 col-12 my-md-0 my-2">
+                        <div class="input-group input-group-flat w-auto">
+                          <span class="input-group-text">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              class="icon icon-1"
+                            >
+                              <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                              <path d="M21 21l-6 -6" />
+                            </svg>
+                          </span>
+                          <input
+                            id="advanced-table-search"
+                            type="text"
+                            class="form-control"
+                            autocomplete="off"
+                            onChange={(e) => {
+                              setFilterText(e.target.value);
+                            }}
+                            placeholder="Cari..."
+                          />
                         </div>
                       </div>
                     </div>
@@ -78,200 +202,258 @@ const DistrictPage = () => {
                       <table class="table table-vcenter table-selectable">
                         <thead>
                           <tr>
-                            <th class="w-1"></th>
                             <th>
-                              <button class="table-sort d-flex justify-content-between" data-sort="sort-name">
-                                Name
+                              <button
+                                class="table-sort d-flex justify-content-between"
+                                data-sort="sort-name"
+                              >
+                                No
                               </button>
                             </th>
                             <th>
-                              <button class="table-sort d-flex justify-content-between" data-sort="sort-city">
-                                City
+                              <button
+                                class="table-sort d-flex justify-content-between"
+                                data-sort="sort-name"
+                              >
+                                Kode
                               </button>
                             </th>
                             <th>
-                              <button class="table-sort d-flex justify-content-between" data-sort="sort-status">
+                              <button
+                                class="table-sort d-flex justify-content-between"
+                                data-sort="sort-city"
+                              >
+                                Nama
+                              </button>
+                            </th>
+                            <th>
+                              <button
+                                class="table-sort d-flex justify-content-between"
+                                data-sort="sort-status"
+                              >
                                 Status
                               </button>
                             </th>
-                            <th>
-                              <button class="table-sort d-flex justify-content-between" data-sort="sort-date">
-                                Start date
-                              </button>
-                            </th>
-                            <th>
-                              <button class="table-sort d-flex justify-content-between" data-sort="sort-tags">
-                                Tags
-                              </button>
-                            </th>
-                            <th>
-                              <button class="table-sort d-flex justify-content-between" data-sort="sort-category">
-                                Category
-                              </button>
-                            </th>
+
+                            <th></th>
                           </tr>
                         </thead>
-                        <tbody class="table-tbody">
-                          <tr>
-                            <td>
-                              <input class="form-check-input m-0 align-middle table-selectable-check" type="checkbox" aria-label="Select invoice" value="true" />
-                            </td>
-                            <td class="sort-name">
-                              <span class="avatar avatar-xs me-2"> </span>
-                              Paweł Kuna
-                            </td>
-                            <td class="sort-city">Peimei, China</td>
-                            <td class="sort-status">
-                              <span class="badge bg-success-lt">Active</span>
-                            </td>
-                            <td class="sort-date">December 08, 2024</td>
-                            <td class="sort-tags">
-                              <div class="badges-list">
-                                <span class="badge">Event</span>
-                                <span class="badge">Tickets</span>
-                              </div>
-                            </td>
-                            <td class="sort-category py-0">
-                              <span class="on-unchecked"> Individual </span>
-                              <div class="on-checked">
-                                <div class="d-flex justify-content-end">
-                                  <a href="#" class="btn btn-2 btn-icon" aria-label="Button">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
-                                      <path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-                                      <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-                                      <path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-                                    </svg>
-                                  </a>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <input class="form-check-input m-0 align-middle table-selectable-check" type="checkbox" aria-label="Select invoice" value="true" />
-                            </td>
-                            <td class="sort-name">
-                              <span class="avatar avatar-xs me-2"> </span>
-                              Jeffie Lewzey
-                            </td>
-                            <td class="sort-city">Indaial, Brazil</td>
-                            <td class="sort-status">
-                              <span class="badge bg-danger-lt">Inactive</span>
-                            </td>
-                            <td class="sort-date">January 01, 2024</td>
-                            <td class="sort-tags">
-                              <div class="badges-list">
-                                <span class="badge">QTA</span>
-                                <span class="badge">Event</span>
-                              </div>
-                            </td>
-                            <td class="sort-category py-0">
-                              <span class="on-unchecked"> Agencies </span>
-                              <div class="on-checked">
-                                <div class="d-flex justify-content-end">
-                                  <a href="#" class="btn btn-2 btn-icon" aria-label="Button">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-2">
-                                      <path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-                                      <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-                                      <path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-                                    </svg>
-                                  </a>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
+
+                        <tbody className="table-tbody">
+                          {isLoading
+                            ? [...Array(10)]?.map((_, index) => (
+                                <tr
+                                  key={`loading-${index}`}
+                                  style={{
+                                    cursor: "loader",
+                                  }}
+                                >
+                                  <td className="sort-name py-4">
+                                    {(currentPage - 1) * perPage + index + 1}.
+                                  </td>
+                                  {[...Array(4)]?.map((_, i) => (
+                                    <td key={i}>
+                                      <div className="placeholder placeholder-lg w-75"></div>
+                                    </td>
+                                  ))}
+                                </tr>
+                              ))
+                            : paginatedItems?.map((district, index) => (
+                                <tr key={district.id}>
+                                  <td className="sort-name">
+                                    {(currentPage - 1) * perPage + index + 1}.
+                                  </td>
+                                  <td className="sort-name">{district?.id}</td>
+                                  <td className="sort-district">
+                                    {district?.name}
+                                  </td>
+                                  <td className="sort-status">
+                                    <span className="badge bg-success-lt">
+                                      Active
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <div class="btn-list flex-nowrap justify-content-center">
+                                      <a
+                                        href="#"
+                                        class="btn btn-1 bg-secondary-lt"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modal-form"
+                                        aria-label="Create new report"
+                                        onClick={() => {
+                                          setIsEdit(true);
+                                          setFormState({
+                                            id: district?.id,
+                                            name: district?.name,
+                                            city_id: district?.regency_id,
+                                            province_id: district?.province_id,
+                                          });
+                                          setIsShowModal(true);
+                                        }}
+                                      >
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          width="24"
+                                          height="24"
+                                          viewBox="0 0 24 24"
+                                          fill="none"
+                                          stroke="currentColor"
+                                          stroke-width="2"
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          class="icon icon-tabler icons-tabler-outline icon-tabler-edit"
+                                        >
+                                          <path
+                                            stroke="none"
+                                            d="M0 0h24v24H0z"
+                                            fill="none"
+                                          />
+                                          <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                          <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+                                          <path d="M16 5l3 3" />
+                                        </svg>{" "}
+                                        Edit{" "}
+                                      </a>
+                                      <a
+                                        href="#"
+                                        class="btn btn-1 bg-danger-lt"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modal-delete"
+                                        aria-label="Create new report"
+                                        onClick={() => {
+                                          setFormState({
+                                            id: district?.id,
+                                            city_id: district?.regency_id,
+                                            name: district?.name,
+                                            province_id: district?.province_id,
+                                          });
+                                        }}
+                                        onclick={openModalDelete}
+                                      >
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          width="24"
+                                          height="24"
+                                          viewBox="0 0 24 24"
+                                          fill="none"
+                                          stroke="currentColor"
+                                          stroke-width="2"
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          class="icon icon-tabler icons-tabler-outline icon-tabler-trash"
+                                        >
+                                          <path
+                                            stroke="none"
+                                            d="M0 0h24v24H0z"
+                                            fill="none"
+                                          />
+                                          <path d="M4 7l16 0" />
+                                          <path d="M10 11l0 6" />
+                                          <path d="M14 11l0 6" />
+                                          <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                          <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                        </svg>{" "}
+                                        Hapus
+                                      </a>
+                                    </div>
+                                  </td>
+                                </tr>
+                              ))}
                         </tbody>
                       </table>
                     </div>
-                    <div class="card-footer d-flex align-items-center">
-                      <div class="dropdown">
-                        <a class="btn dropdown-toggle" data-bs-toggle="dropdown">
-                          <span id="page-count" class="me-1">
-                            20
+                    <div className="card-footer d-flex align-items-center">
+                      <div className="dropdown">
+                        <button
+                          className="btn dropdown-toggle"
+                          data-bs-toggle="dropdown"
+                        >
+                          <span id="page-count" className="me-1">
+                            {perPage}
                           </span>
                           <span>records</span>
-                        </a>
-                        <div class="dropdown-menu">
-                          <a class="dropdown-item" onclick="setPageListItems(event)" data-value="10">
-                            10 records
-                          </a>
-                          <a class="dropdown-item" onclick="setPageListItems(event)" data-value="20">
-                            20 records
-                          </a>
-                          <a class="dropdown-item" onclick="setPageListItems(event)" data-value="50">
-                            50 records
-                          </a>
-                          <a class="dropdown-item" onclick="setPageListItems(event)" data-value="100">
-                            100 records
-                          </a>
+                        </button>
+                        <div className="dropdown-menu">
+                          {[10, 20, 50, 100].map((value) => (
+                            <button
+                              key={value}
+                              className="dropdown-item"
+                              onClick={() => handlePerPageChange(value)}
+                            >
+                              {value} records
+                            </button>
+                          ))}
                         </div>
                       </div>
-                      <ul class="pagination m-0 ms-auto">
-                        <li class="page-item disabled">
-                          <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
+
+                      <ul className="pagination m-0 ms-auto">
+                        <li
+                          className={`page-item ${
+                            currentPage === 1 ? "disabled" : ""
+                          }`}
+                        >
+                          <button
+                            className="page-link"
+                            onClick={() =>
+                              setCurrentPage((prev) => Math.max(prev - 1, 1))
+                            }
+                          >
+                            <svg
+                              width="24"
+                              height="24"
+                              stroke="currentColor"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                            >
                               <path d="M15 6l-6 6l6 6" />
                             </svg>
                             prev
-                          </a>
+                          </button>
                         </li>
-                        <li class="page-item">
-                          <a class="page-link" href="#">
-                            1
-                          </a>
-                        </li>
-                        <li class="page-item">
-                          <a class="page-link" href="#">
-                            2
-                          </a>
-                        </li>
-                        <li class="page-item active">
-                          <a class="page-link" href="#">
-                            3
-                          </a>
-                        </li>
-                        <li class="page-item">
-                          <a class="page-link" href="#">
-                            4
-                          </a>
-                        </li>
-                        <li class="page-item">
-                          <a class="page-link" href="#">
-                            5
-                          </a>
-                        </li>
-                        <li class="page-item">
-                          <a class="page-link" href="#">
-                            6
-                          </a>
-                        </li>
-                        <li class="page-item">
-                          <a class="page-link" href="#">
-                            7
-                          </a>
-                        </li>
-                        <li class="page-item">
-                          <a class="page-link" href="#">
-                            8
-                          </a>
-                        </li>
-                        <li class="page-item">
-                          <a class="page-link" href="#">
-                            9
-                          </a>
-                        </li>
-                        <li class="page-item">
-                          <a class="page-link" href="#">
-                            10
-                          </a>
-                        </li>
-                        <li class="page-item">
-                          <a class="page-link" href="#">
+
+                        {[...Array(totalPages)]?.map((_, idx) => {
+                          const page = idx + 1;
+                          return (
+                            <li
+                              key={page}
+                              className={`page-item ${
+                                currentPage === page ? "active" : ""
+                              }`}
+                            >
+                              <button
+                                className="page-link"
+                                onClick={() => setCurrentPage(page)}
+                              >
+                                {page}
+                              </button>
+                            </li>
+                          );
+                        })}
+
+                        <li
+                          className={`page-item ${
+                            currentPage === totalPages ? "disabled" : ""
+                          }`}
+                        >
+                          <button
+                            className="page-link"
+                            onClick={() =>
+                              setCurrentPage((prev) =>
+                                Math.min(prev + 1, totalPages)
+                              )
+                            }
+                          >
                             next
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
+                            <svg
+                              width="24"
+                              height="24"
+                              stroke="currentColor"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                            >
                               <path d="M9 6l6 6l-6 6" />
                             </svg>
-                          </a>
+                          </button>
                         </li>
                       </ul>
                     </div>
@@ -282,9 +464,37 @@ const DistrictPage = () => {
           </div>
         </div>
       </div>
-      <FormDistrict isShowModal={isShowModal} closeModal={closeModal} />
+      <FormDistrict
+        isShowModal={isShowModal}
+        isEdit={isEdit}
+        closeModal={closeModal}
+        formState={formState}
+        setFormState={setFormState}
+        fetchCities={fetchCities}
+        cities={cities}
+        isLoading={isLoadingCity}
+      />
+      <ModalDelete
+        labelModal={formState?.name}
+        isShowModal={isShowModalDelete}
+        closeModal={closeModalDelete}
+        handleDelete={handleDelete}
+      />
     </div>
   );
 };
 
-export default DistrictPage;
+const mapStateToProps = (state) => ({
+  districts: state?.regions?.districts?.datas,
+  cities: state?.regions?.cities?.datas,
+  provinces: state?.regions?.provinces?.datas,
+  isLoading: state?.regions?.districts?.loading,
+  isLoadingCity: state?.regions?.cities?.loading,
+  isLoadingProvince: state?.regions?.provinces?.loading,
+});
+
+export default connect(mapStateToProps, {
+  fetchDistricts,
+  fetchCities,
+  fetchProvinces,
+})(DistrictPage);

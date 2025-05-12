@@ -25,9 +25,6 @@ const FormCity = (props) => {
 
   return (
     <div
-      // class={
-      //   isShowModal ? "modal modal-blur fade show" : "modal modal-blur fade "
-      // }
       className="modal modal-blur fade "
       id="modal-form"
       tabindex="-1"
@@ -58,7 +55,7 @@ const FormCity = (props) => {
                   <label class="form-label">Provinsi</label>
                   <Select
                     options={!options ? [] : options}
-                    name="dpjp"
+                    name="provinces"
                     className="form-select p-0"
                     styles={{
                       control: (base) => ({

@@ -4,7 +4,6 @@ import { fetchCities } from "../../../actions/regionAction/cityAction";
 import { fetchProvinces } from "../../../actions/regionAction/provinceAction";
 import { connect, useDispatch } from "react-redux";
 import ModalDelete from "../../../components/Modals/ModalDelete";
-import OverlayLoading from "../../../components/Loading/OverlayLoading";
 
 const CityPage = (props) => {
   const {

@@ -4,13 +4,15 @@ export const SET_DISTRICTS = "SET_DISTRICTS";
 export const SET_DISTRICTS_LOADING = "SET_DISTRICTS_LOADING";
 export const SET_DISTRICTS_ERROR = "SET_DISTRICTS_ERROR";
 
-export const fetchDistricts = () => {
+export const fetchDistricts = (id) => {
   return async (dispatch) => {
     dispatch({ type: SET_DISTRICTS_LOADING, status: true });
 
     try {
       const response = await axios.get(
-        "https://www.emsifa.com/api-wilayah-indonesia/api/districts.json"
+        "https://www.emsifa.com/api-wilayah-indonesia/api/districts/" +
+          id +
+          ".json"
       );
 
       if (response.status === 200 || response.status === 201) {
