@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+import 'bootstrap/dist/css/bootstrap.min.css';  // Import Bootstrap
+import '@tabler/core/dist/css/tabler.min.css'; // Import Tabler CSS
+import '@tabler/core/dist/js/tabler.min.js';   // Import Tabler JS
+// import "./index.css";
 import App from './views/App';
 import reportWebVitals from './reportWebVitals';
 import { createStore, applyMiddleware } from 'redux';
@@ -8,11 +11,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import rootReducer from './reducers';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Login from './views/Auth/Login';
-import Register from './views/Auth/Register';
-import NotFound from './views/NotFound';
-import Dashboard from './views/Dashboard';
-// Register
+import history from './routers/history';
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
@@ -20,16 +19,8 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
-        <Routes>
-          <Route path='/'>
-            <Route index path='/' element={<App />} />
-            <Route path='/login' element={<Login />} />
-            <Route path='/register' element={<Register />} />
-            <Route path='/dashboard' element={<Dashboard />} />
-            <Route path='*' element={<NotFound />} />
-          </Route>
-        </Routes>
+      <BrowserRouter history={history}>
+        <App />
       </BrowserRouter>
     </Provider>
   </React.StrictMode>

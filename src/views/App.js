@@ -1,107 +1,39 @@
-import '../App.css';
+import "../App.css";
 // import { useEffect } from 'react';
-import { React, useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { getWaybill } from '../actions';
-import {
-  getAllProducts,
-  getProductById,
-  getSearchProducts,
-  getAllProductsCategories,
-  getAllProductsByCategory,
-} from '../actions/productAction';
-import {
-  getAllUsers,
-  getUserById,
-  getSearchUsers,
-} from '../actions/userAction';
-import SiderBar from './Dashboard/Components/SiderBar';
-import Main from './Dashboard/Components/Main';
-import NavBar from './Dashboard/Components/NavBar';
+import { React, useState, useEffect } from "react";
+import { connect } from "react-redux";
+import { Route, Routes } from "react-router-dom";
+import { routes } from "../routers";
+import { Suspense, lazy } from "react";
+import { AppLayout } from "../layouts";
+import { NotFoundPage } from "../pages";
+import { Toaster } from "react-hot-toast";
+
 function App(props) {
-  const {
-    state,
-    products,
-    product,
-    categories,
-    users,
-    user,
-    getWaybill,
-    getAllProducts,
-    getProductById,
-    getSearchProducts,
-    getAllProductsCategories,
-    getAllProductsByCategory,
-    getAllUsers,
-    getUserById,
-    getSearchUsers,
-  } = props;
-  const getDataWaybill = async () => {
-    await getWaybill();
-  };
-  const getDataProducts = async () => {
-    await getAllProducts();
-  };
-  const getDataProduct = async (id) => {
-    await getProductById(id);
-  };
-  const getSearchDataProducts = async (query) => {
-    await getSearchProducts(query);
-  };
-  const getDataProductsCategories = async () => {
-    await getAllProductsCategories();
-  };
-  const getDataProductsByCategory = async (category) => {
-    await getAllProductsByCategory(category);
-  };
-  const getDataUsers = async () => {
-    await getAllUsers();
-  };
-  const getDataUser = async (id) => {
-    await getUserById(id);
-  };
-  const getSearchDataUsers = async (query) => {
-    await getSearchUsers(query);
-  };
-  useEffect(() => {
-    // getDataWaybill();
-    // getDataProducts();
-    // getDataProduct(1);
-    // getSearchDataProducts('samsung');
-    // getDataProductsCategories();
-    // getDataProductsByCategory('smartphones');
-    // getDataUsers();
-    // getDataUser(1);
-    getSearchDataUsers('as');
-  }, []);
-  // console.log(categories, 'categories');
-  // console.log(products, 'products');
-  console.log(users, 'users');
+  const routeComponents = routes.map((item) => {
+    return (
+      <Route
+        key={item.path}
+        path={item.path}
+        exact={item.exact}
+        element={
+          <AppLayout needAuthenticated={item.needAuthenticated}>
+            <Toaster position="top-right" />
+            <item.layout>
+              <item.element />
+            </item.layout>
+          </AppLayout>
+        }
+      />
+    );
+  });
+
   return (
-    <div class='antialiased bg-gray-50 dark:bg-gray-900'>
-      <NavBar />
-      <SiderBar />
-      <Main />
-    </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <Routes>{routeComponents}</Routes>
+    </Suspense>
   );
 }
 
-const mapStateToProps = (state) => ({
-  state: state.waybill.data,
-  products: state.products.datas,
-  product: state.products.data,
-  categories: state.products.categories,
-  users: state.users.datas,
-  user: state.users.data,
-});
-export default connect(mapStateToProps, {
-  getWaybill,
-  getAllProducts,
-  getProductById,
-  getSearchProducts,
-  getAllProductsByCategory,
-  getAllProductsCategories,
-  getAllUsers,
-  getUserById,
-  getSearchUsers,
-})(App);
+const mapStateToProps = (state) => ({});
+export default connect(mapStateToProps, {})(App);
