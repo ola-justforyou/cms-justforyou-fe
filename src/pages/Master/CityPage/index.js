@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import FormCity from "./FormCity";
 import { fetchCities } from "../../../actions/regionAction/cityAction";
 import { fetchProvinces } from "../../../actions/regionAction/provinceAction";
-import { connect, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 import ModalDelete from "../../../components/Modals/ModalDelete";
 
 const CityPage = (props) => {
@@ -27,7 +27,6 @@ const CityPage = (props) => {
     name: "",
     province_id: "18",
   };
-  const dispatch = useDispatch();
   const [isShowModal, setIsShowModal] = useState(false);
   const [isShowModalDelete, setIsShowModalDelete] = useState(false);
   const [isEdit, setIsEdit] = useState(false);

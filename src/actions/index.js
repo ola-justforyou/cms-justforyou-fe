@@ -1,7 +1,6 @@
 // actions.js
-import axios from 'axios';
-import apiConfig from '../api/config';
-export const SET_WAYBILL_DATA = 'SET_WAYBILL_DATA';
+
+export const SET_WAYBILL_DATA = "SET_WAYBILL_DATA";
 export const getWaybill = () => (dispatch) => {
   // axios.get(apiConfig.baseUrl + 'waybill').then((response) => {
   //   if (response.status === 200 || response.status === 201) {

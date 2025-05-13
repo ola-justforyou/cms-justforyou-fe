@@ -3,7 +3,7 @@ import FormDistrict from "./FormDistrict";
 import { fetchDistricts } from "../../../actions/regionAction/districtAction";
 import { fetchCities } from "../../../actions/regionAction/cityAction";
 import { fetchProvinces } from "../../../actions/regionAction/provinceAction";
-import { connect, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 import ModalDelete from "../../../components/Modals/ModalDelete";
 
 const DistrictPage = (props) => {
@@ -32,7 +32,6 @@ const DistrictPage = (props) => {
     city_id: "1805",
     province_id: "18",
   };
-  const dispatch = useDispatch();
   const [isShowModal, setIsShowModal] = useState(false);
   const [isShowModalDelete, setIsShowModalDelete] = useState(false);
   const [isEdit, setIsEdit] = useState(false);

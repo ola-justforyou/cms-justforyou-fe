@@ -1,5 +1,13 @@
-import { HomePage,UnderMaintenancePage, LoginPage, NotFoundPage, ServerErrorPage,PartnershipPage,Master } from "../pages";
-import  {FullLayout, DashboardLayout}  from "../layouts";
+import {
+  HomePage,
+  UnderMaintenancePage,
+  LoginPage,
+  NotFoundPage,
+  ServerErrorPage,
+  PartnershipPage,
+  Master,
+} from "../pages";
+import { FullLayout, DashboardLayout } from "../layouts";
 import PATH_URL from "./path";
 
 export const routes = [
@@ -20,97 +28,97 @@ export const routes = [
   {
     path: PATH_URL.HOME,
     element: HomePage,
-    needAuthenticated: false,
+    needAuthenticated: true,
     layout: DashboardLayout,
   },
   {
     path: PATH_URL.MASTER_ACCOUNTS,
     element: Master.AccountPage,
-    needAuthenticated: false,
+    needAuthenticated: true,
     layout: DashboardLayout,
   },
   {
     path: PATH_URL.MASTER_ROLES,
     element: Master.RolePage,
-    needAuthenticated: false,
+    needAuthenticated: true,
     layout: DashboardLayout,
   },
   {
     path: PATH_URL.MASTER_PERMISSIONS,
     element: Master.PermissionPage,
-    needAuthenticated: false,
+    needAuthenticated: true,
     layout: DashboardLayout,
   },
   {
     path: PATH_URL.MASTER_INVITATION_PACKAGES,
     element: Master.InvitationPackagePage,
-    needAuthenticated: false,
+    needAuthenticated: true,
     layout: DashboardLayout,
   },
   {
     path: PATH_URL.MASTER_INVITATION_SERVICES,
     element: Master.InvitationServicePage,
-    needAuthenticated: false,
+    needAuthenticated: true,
     layout: DashboardLayout,
   },
   {
     path: PATH_URL.MASTER_INVITATION_TAGS,
     element: Master.InvitationTagPage,
-    needAuthenticated: false,
+    needAuthenticated: true,
     layout: DashboardLayout,
   },
   {
     path: PATH_URL.MASTER_INVITATION_TEMPLATES,
     element: Master.InvitationTemplatePage,
-    needAuthenticated: false,
+    needAuthenticated: true,
     layout: DashboardLayout,
   },
   {
     path: PATH_URL.MASTER_REGEION_PROVINCES,
     element: Master.ProvincePage,
-    needAuthenticated: false,
+    needAuthenticated: true,
     layout: DashboardLayout,
   },
   {
     path: PATH_URL.MASTER_REGEION_DISTRICTS,
     element: Master.DistrictPage,
-    needAuthenticated: false,
+    needAuthenticated: true,
     layout: DashboardLayout,
   },
   {
     path: PATH_URL.MASTER_REGEION_CITIES,
     element: Master.CityPage,
-    needAuthenticated: false,
+    needAuthenticated: true,
     layout: DashboardLayout,
   },
   {
     path: PATH_URL.MASTER_REGEION_VILLAGES,
     element: Master.VillagePage,
-    needAuthenticated: false,
+    needAuthenticated: true,
     layout: DashboardLayout,
   },
   {
     path: PATH_URL.PARTNERSHIPS,
     element: PartnershipPage,
-    needAuthenticated: false,
+    needAuthenticated: true,
     layout: DashboardLayout,
   },
   {
     path: PATH_URL.NOT_FOUND,
     element: NotFoundPage,
-    needAuthenticated: false,
+    needAuthenticated: true,
     layout: FullLayout,
   },
   {
     path: PATH_URL.SERVER_ERROR,
     element: ServerErrorPage,
-    needAuthenticated: false,
+    needAuthenticated: true,
     layout: FullLayout,
   },
   {
     path: PATH_URL.UNDER_MAINTENANCE,
     element: UnderMaintenancePage,
-    needAuthenticated: false,
+    needAuthenticated: true,
     layout: FullLayout,
   },
 ];

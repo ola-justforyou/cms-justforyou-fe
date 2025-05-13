@@ -4,7 +4,7 @@ import {
   fetchProvinces,
   addProvince,
 } from "../../../actions/regionAction/provinceAction";
-import { connect, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 import ModalDelete from "../../../components/Modals/ModalDelete";
 import OverlayLoading from "../../../components/Loading/OverlayLoading";
 
@@ -22,7 +22,6 @@ const ProvincePage = (props) => {
     id: "",
     name: "",
   };
-  const dispatch = useDispatch();
   const [isShowModal, setIsShowModal] = useState(false);
   const [isShowModalDelete, setIsShowModalDelete] = useState(false);
   const [isEdit, setIsEdit] = useState(false);

@@ -1,12 +1,11 @@
-import React from "react";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useParams } from "react-router-dom";
-const Sidebar = () => {
-  const dispatch = useDispatch();
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import { logout } from "../../actions/authAction/loginAction";
+import { Link, useLocation } from "react-router-dom";
+const Sidebar = (props) => {
+  const { logout } = props;
   const location = useLocation();
   const pathname = location.pathname;
-  const params = useParams();
   const [isAreaExpanded, setAreaExpanded] = useState(false);
   useEffect(() => {
     setAreaExpanded(false);
@@ -1526,7 +1525,7 @@ const Sidebar = () => {
               <a href="./settings.html" class="dropdown-item">
                 Settings
               </a>
-              <a href="./sign-in.html" class="dropdown-item">
+              <a onClick={logout} class="dropdown-item cursor-pointer">
                 Logout
               </a>
             </div>
@@ -1922,4 +1921,8 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+const mapStateToProps = (state) => ({});
+
+export default connect(mapStateToProps, {
+  logout,
+})(Sidebar);
