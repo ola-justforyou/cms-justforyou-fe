@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { logout } from "../../actions/authAction/loginAction";
 import { Link, useLocation } from "react-router-dom";
+import logo from "../../assets/images/logo.png";
 const Sidebar = (props) => {
   const { logout } = props;
   const location = useLocation();
@@ -27,7 +28,7 @@ const Sidebar = (props) => {
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="navbar-brand navbar-brand-autodark">
-          <a href=".">
+          {/* <a href=".">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="110"
@@ -49,7 +50,17 @@ const Sidebar = (props) => {
               </svg>
             </svg>
             Justforyou
-          </a>
+          </a> */}
+          <img
+            src={logo}
+            alt="Logo"
+            style={{
+              width: "4em",
+              backgroundColor: "transparent",
+              filter: "none",
+              mixBlendMode: "normal",
+            }}
+          />
         </div>
         <div class="navbar-nav flex-row d-lg-none">
           <div class="nav-item d-none d-lg-flex me-3">
@@ -1539,7 +1550,7 @@ const Sidebar = (props) => {
           }`}
           id="sidebar-menu"
         >
-          <ul class="navbar-nav pt-lg-3">
+          <ul class="navbar-nav pt-lg-0">
             <li
               className={`nav-item ${
                 pathname?.split("/")[1] === "home" ? "active" : ""

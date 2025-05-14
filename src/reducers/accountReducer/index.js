@@ -1,37 +1,37 @@
 import {
-  SET_USER,
-  SET_LIST_USERS,
-  SET_USER_LOADING,
-  SET_USER_ERROR,
-} from '../../constants/actionType';
+  SET_ACCOUNTS,
+  SET_ACCOUNT,
+  SET_ACCOUNTS_ERROR,
+  SET_ACCOUNTS_LOADING,
+} from "../../actions/accountAction";
+
 var initialState = {
-  data: {},
-  datas: {},
-  categories: {},
+  datas: [],
+  data: "",
   loading: false,
   error: null,
 };
 
-const userReducer = (state, action) => {
+const accountReducer = (state, action) => {
   state = state || initialState;
   switch (action.type) {
-    case SET_USER:
-      return {
-        ...state,
-        data: action.data,
-      };
-    case SET_LIST_USERS:
+    case SET_ACCOUNTS:
       return {
         ...state,
         datas: action.data,
       };
-    case SET_USER_ERROR:
+    case SET_ACCOUNT:
+      return {
+        ...state,
+        data: action.data,
+      };
+    case SET_ACCOUNTS_ERROR:
       return {
         ...state,
         loading: false,
         error: action.error,
       };
-    case SET_USER_LOADING:
+    case SET_ACCOUNTS_LOADING:
       return {
         ...state,
         loading: action.status,
@@ -41,4 +41,4 @@ const userReducer = (state, action) => {
   }
 };
 
-export default userReducer;
+export default accountReducer;

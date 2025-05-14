@@ -97,7 +97,6 @@ const CityPage = (props) => {
                   class="btn btn-primary btn-5 d-none d-sm-inline-block"
                   data-bs-toggle="modal"
                   data-bs-target="#modal-form"
-                  onclick={openModal}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -121,7 +120,6 @@ const CityPage = (props) => {
                   class="btn btn-primary btn-6 d-sm-none btn-icon"
                   data-bs-toggle="modal"
                   data-bs-target="#modal-form"
-                  onclick={openModal}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -317,7 +315,6 @@ const CityPage = (props) => {
                                             name: city?.name,
                                           });
                                         }}
-                                        onclick={openModalDelete}
                                       >
                                         <svg
                                           xmlns="http://www.w3.org/2000/svg"

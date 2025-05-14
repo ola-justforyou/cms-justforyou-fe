@@ -26,7 +26,6 @@ const PartnershipPage = () => {
                   class="btn btn-primary btn-5 d-none d-sm-inline-block"
                   data-bs-toggle="modal"
                   data-bs-target="#modal-report"
-                  onclick={openModal}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
