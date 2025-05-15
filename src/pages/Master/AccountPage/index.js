@@ -1,9 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { fetchAccounts } from "../../../actions/accountAction";
+import {
+  fetchAccounts,
+  getAccountById,
+  addAccount,
+  updateAccount,
+  deleteAccount,
+} from "../../../actions/accountAction";
 import { connect } from "react-redux";
 import ModalDelete from "../../../components/Modals/ModalDelete";
+import FormAccount from "./FormAccount";
+import UserAvatar from "../../../components/UserAvatar";
+
 const AccountPage = (props) => {
-  const { accounts, isLoading, fetchAccounts, addProvince } = props;
+  const {
+    account,
+    accounts,
+    isLoading,
+    fetchAccounts,
+    getAccountById,
+    addAccount,
+    updateAccount,
+    deleteAccount,
+  } = props;
   const [perPage, setPerPage] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -14,7 +32,12 @@ const AccountPage = (props) => {
 
   const initialState = {
     id: "",
+    username: "",
     name: "",
+    role: "admin",
+    whatsapp: "",
+    password: "",
+    image: "",
   };
   const [isShowModal, setIsShowModal] = useState(false);
   const [isShowModalDelete, setIsShowModalDelete] = useState(false);
@@ -50,7 +73,7 @@ const AccountPage = (props) => {
   };
   const handleAdd = () => {
     // console.log("formState", formState);
-    addProvince(formState);
+    addAccount(formState);
     // setIsShowModal(false);
   };
   const handleEdit = (item) => {
@@ -65,7 +88,7 @@ const AccountPage = (props) => {
     if (accounts) {
       const filteredItems = accounts?.filter((item) => {
         const isTextMatch =
-          item?.id?.toLowerCase()?.includes(filterText?.toLowerCase()) ||
+          item?.username?.toLowerCase()?.includes(filterText?.toLowerCase()) ||
           item?.name?.toLowerCase()?.includes(filterText?.toLowerCase());
 
         return isTextMatch;
@@ -81,7 +104,7 @@ const AccountPage = (props) => {
           <div class="row g-2 align-items-center">
             <div class="col">
               <div class="page-pretitle">Master Wilayah</div>
-              <h2 class="page-title">Provinsi</h2>
+              <h2 class="page-title">Akun</h2>
             </div>
             <div class="col-auto ms-auto d-print-none">
               <div class="btn-list">
@@ -107,7 +130,7 @@ const AccountPage = (props) => {
                     <path d="M12 5l0 14" />
                     <path d="M5 12l14 0" />
                   </svg>
-                  Tambah provinsi
+                  Tambah Akun
                 </a>
                 <a
                   href="#"
@@ -146,9 +169,9 @@ const AccountPage = (props) => {
                   <div class="card-header ">
                     <div class="row w-full">
                       <div class="col-md-9 col-12">
-                        <h3 class="card-title mb-0">Provinsi</h3>
+                        <h3 class="card-title mb-0">Akun</h3>
                         <p class="text-secondary m-0">
-                          Master wilayah provinsi di justforyou
+                          Master Akun di justforyou
                         </p>
                       </div>
                       <div className="col-md-3 col-12 my-md-0 my-2">
@@ -200,9 +223,26 @@ const AccountPage = (props) => {
                             <th>
                               <button
                                 class="table-sort d-flex justify-content-between"
+                                data-sort="sort-city"
+                              >
+                                Nama lengkap
+                              </button>
+                            </th>
+                            <th>
+                              <button
+                                class="table-sort d-flex justify-content-between"
                                 data-sort="sort-name"
                               >
-                                Kode
+                                Username
+                              </button>
+                            </th>
+
+                            <th>
+                              <button
+                                class="table-sort d-flex justify-content-between"
+                                data-sort="sort-city"
+                              >
+                                Role
                               </button>
                             </th>
                             <th>
@@ -210,7 +250,7 @@ const AccountPage = (props) => {
                                 class="table-sort d-flex justify-content-between"
                                 data-sort="sort-city"
                               >
-                                Nama
+                                Whatsapp
                               </button>
                             </th>
                             <th>
@@ -250,12 +290,26 @@ const AccountPage = (props) => {
                                 </tr>
                               ))
                             : paginatedItems?.map((account, index) => (
-                                <tr key={account.id}>
+                                <tr key={account?.id}>
                                   <td className="sort-name">
                                     {(currentPage - 1) * perPage + index + 1}.
                                   </td>
-                                  <td className="sort-name">{account?.id}</td>
-                                  <td className="sort-city">{account?.name}</td>
+                                  <td className="sort-city">
+                                    <UserAvatar
+                                      fullName="Ari Purnomo"
+                                      imageUrl="https://i.pravatar.cc/300"
+                                      size="xs"
+                                      className="me-2"
+                                    />
+                                    {account?.name}
+                                  </td>
+                                  <td className="sort-name">
+                                    {account?.username}
+                                  </td>
+                                  <td className="sort-city">{account?.role}</td>
+                                  <td className="sort-city">
+                                    {account?.whatsapp}
+                                  </td>
                                   <td className="sort-status">
                                     <span className="badge bg-success-lt">
                                       Active
@@ -274,6 +328,9 @@ const AccountPage = (props) => {
                                           setFormState({
                                             id: account?.id,
                                             name: account?.name,
+                                            username: account?.username,
+                                            role: account?.role,
+                                            whatsapp: account?.whatsapp,
                                           });
                                           setIsShowModal(true);
                                         }}
@@ -311,6 +368,9 @@ const AccountPage = (props) => {
                                           setFormState({
                                             id: account?.id,
                                             name: account?.name,
+                                            username: account?.username,
+                                            role: account?.role,
+                                            whatsapp: account?.whatsapp,
                                           });
                                         }}
                                       >
@@ -448,7 +508,7 @@ const AccountPage = (props) => {
           </div>
         </div>
       </div>
-      {/* <FormProvince
+      <FormAccount
         isShowModal={isShowModal}
         isEdit={isEdit}
         closeModal={closeModal}
@@ -456,7 +516,7 @@ const AccountPage = (props) => {
         setFormState={setFormState}
         handleAdd={handleAdd}
         handleEdit={handleEdit}
-      /> */}
+      />
       <ModalDelete
         labelModal={formState?.name}
         isShowModal={isShowModalDelete}
@@ -469,8 +529,15 @@ const AccountPage = (props) => {
 };
 
 const mapStateToProps = (state) => ({
+  account: state?.accounts?.data,
   accounts: state?.accounts?.datas,
   isLoading: state?.accounts?.loading,
 });
 
-export default connect(mapStateToProps, { fetchAccounts })(AccountPage);
+export default connect(mapStateToProps, {
+  fetchAccounts,
+  getAccountById,
+  addAccount,
+  updateAccount,
+  deleteAccount,
+})(AccountPage);
