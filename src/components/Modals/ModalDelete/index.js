@@ -49,22 +49,24 @@ const ModalDelete = (props) => {
               <path d="M12 16h.01" />
             </svg>
             <h3>Apakah anda yakin?</h3>
-            <div class="text-secondary">
-              Apakah anda yakin ingin menghapus data {labelModal}?
-            </div>
+            <div class="text-secondary">Menghapus data {labelModal} </div>
           </div>
           <div class="modal-footer">
             <div class="w-100">
               <div class="row">
-                <div class="col" onlick={closeModal}>
-                  <a class="btn btn-3 w-100" data-bs-dismiss="modal">
+                <div class="col">
+                  <a
+                    class="btn btn-3 w-100"
+                    data-bs-dismiss="modal"
+                    onClick={closeModal}
+                  >
                     {" "}
                     Cancel{" "}
                   </a>
                 </div>
                 <div
                   class="col"
-                  onlick={() => {
+                  onClick={() => {
                     handleDelete();
                   }}
                 >

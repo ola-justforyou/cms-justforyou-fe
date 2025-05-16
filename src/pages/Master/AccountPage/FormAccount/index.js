@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import MultiSelect from "react-select";
+import { FileUploader } from "react-drag-drop-files";
+import { fileToBase64 } from "../../../../utils/helpers/fileToBase64";
 
 const FormAccount = (props) => {
   const {
@@ -9,12 +11,21 @@ const FormAccount = (props) => {
     formState,
     setFormState,
     handleAdd,
+    handleUpdate,
   } = props;
+  const [showPassword, setShowPassword] = useState(false);
+  const inputRefName = useRef(null);
+  const inputRef = useRef(null);
+  useEffect(() => {
+    inputRefName.current?.focus();
+  }, []);
+
   const options = [
     { value: "chocolate", label: "Chocolate" },
     { value: "strawberry", label: "Strawberry" },
     { value: "vanilla", label: "Vanilla" },
   ];
+
   console.log("formState", formState);
 
   return (
@@ -63,6 +74,7 @@ const FormAccount = (props) => {
                     </svg>
                   </span>
                   <input
+                    ref={inputRefName}
                     type="text"
                     className="form-control"
                     name="name"
@@ -114,8 +126,13 @@ const FormAccount = (props) => {
               </div>
               <div class="col-lg-12">
                 <label class="form-label">Password</label>
-                <div class="mb-3 input-icon">
-                  <span class="input-icon-addon">
+                <div class="mb-3 input-icon  input-group ">
+                  <span
+                    class="input-icon-addon "
+                    style={{
+                      zIndex: 9999,
+                    }}
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -134,8 +151,9 @@ const FormAccount = (props) => {
                     </svg>
                   </span>
                   <input
-                    type="password"
-                    className="form-control"
+                    ref={inputRef}
+                    type={showPassword ? "text" : "password"}
+                    className="form-control "
                     name="password"
                     placeholder="password"
                     value={formState?.password || ""}
@@ -145,11 +163,68 @@ const FormAccount = (props) => {
                         password: e.target.value,
                       }))
                     }
+                    style={{
+                      borderRadius: "6px 0 0 6px",
+                    }}
                   />
+                  <span class="input-group-text">
+                    <div
+                      class="link-secondary cursor-pointer"
+                      title="Show password"
+                      data-bs-toggle="tooltip"
+                      onClick={() => {
+                        const input = inputRef.current;
+                        const length = input.value.length;
+                        setShowPassword(!showPassword);
+                        if (input) {
+                          setTimeout(() => {
+                            input.focus();
+                            input.setSelectionRange(length, length);
+                          }, 0);
+                        }
+                      }}
+                    >
+                      {showPassword ? (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="icon icon-tabler icons-tabler-outline icon-tabler-eye-off"
+                        >
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                          <path d="M10.585 10.587a2 2 0 0 0 2.829 2.828" />
+                          <path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87" />
+                          <path d="M3 3l18 18" />
+                        </svg>
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="icon icon-1"
+                        >
+                          <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                          <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                        </svg>
+                      )}
+                    </div>
+                  </span>
                 </div>
               </div>
               <div class="col-lg-12">
-                <label class="form-label">Username</label>
+                <label class="form-label">Whatsapp</label>
                 <div class="mb-3 input-icon">
                   <span class="input-icon-addon">
                     <svg
@@ -171,16 +246,25 @@ const FormAccount = (props) => {
                   </span>
                   <input
                     type="text"
+                    onWheel={(e) => e.target.blur()}
                     className="form-control"
                     name="whatsapp"
                     placeholder="whatsapp"
+                    required
                     value={formState?.whatsapp || ""}
-                    onChange={(e) =>
-                      setFormState((prev) => ({
-                        ...prev,
-                        whatsapp: e.target.value,
-                      }))
-                    }
+                    onChange={(e) => {
+                      const newValue = e.target.value.slice(0, 14);
+
+                      // Hanya izinkan angka (regex: hanya digit)
+                      if (/^\d*$/.test(newValue)) {
+                        // setValue(newValue);
+
+                        setFormState((prev) => ({
+                          ...prev,
+                          whatsapp: newValue,
+                        }));
+                      }
+                    }}
                   />
                 </div>
               </div>
@@ -228,6 +312,29 @@ const FormAccount = (props) => {
                           boxShadow: "none",
                         },
                       }),
+                      multiValue: (base) => ({
+                        ...base,
+                        backgroundColor: "#e3f2fd", // soft light blue
+                        borderRadius: "20px",
+                        padding: "2px 8px",
+                      }),
+                      multiValueLabel: (base) => ({
+                        ...base,
+                        color: "#1976d2", // soft blue text
+                        fontWeight: "500",
+                      }),
+                      multiValueRemove: (base) => ({
+                        ...base,
+                        color: "#1976d2",
+                        ":hover": {
+                          backgroundColor: "#bbdefb", // hover soft blue
+                          color: "#0d47a1",
+                        },
+                      }),
+                      placeholder: (base) => ({
+                        ...base,
+                        color: "#90a4ae", // muted blue-gray
+                      }),
                     }}
                     value={formState.role || []}
                     onChange={(selectedOptions) => {
@@ -243,8 +350,8 @@ const FormAccount = (props) => {
               <div class="col-lg-12">
                 <label class="form-label">Foto Profil</label>
                 <div class="mb-3 w-100 ">
-                  <div className="card p-5 d-flex justify-content-center align-content-center w-100">
-                    <span className="py-5 text-center text-muted">
+                  <div className="card  d-flex justify-content-center align-content-center w-100">
+                    {/* <span className="py-5 text-center text-muted">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -263,7 +370,11 @@ const FormAccount = (props) => {
                         <path d="M12 4l0 12" />
                       </svg>
                       <br /> Drop foto disini
-                    </span>
+                    </span> */}
+                    <DragDropFile
+                      setFormState={setFormState}
+                      formState={formState}
+                    />
                   </div>
                 </div>
               </div>
@@ -283,6 +394,7 @@ const FormAccount = (props) => {
                 href="#"
                 class="btn bg-secondary-lt btn-5 ms-auto"
                 data-bs-dismiss="modal"
+                onClick={handleUpdate}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -332,6 +444,92 @@ const FormAccount = (props) => {
         </div>
       </div>
     </div>
+  );
+};
+const DragDropFile = (props) => {
+  const { setFormState, formState } = props;
+  const fileTypes = ["JPG", "PNG", "GIF"];
+
+  return (
+    <FileUploader
+      multiple={false}
+      handleChange={async (file) => {
+        if (file.length !== 0) {
+          const base64 = await fileToBase64(file);
+
+          setFormState({
+            ...formState,
+            image: base64,
+            file_name: file.name,
+          });
+
+          setFormState({
+            ...formState,
+            image: base64,
+            imageUrl: URL.createObjectURL(file),
+            file_name: file?.name,
+          });
+        }
+      }}
+      name="file"
+      types={fileTypes}
+      dropMessageStyle={{ margin: "0  0.5rem" }}
+      style={{ position: "relative" }}
+    >
+      <div className="d-flex align-items-center justify-content-center w-100 ">
+        <label
+          htmlFor="dropzone-file"
+          className="d-flex flex-column align-items-center justify-content-center w-100  rounded cursor-pointer bg-light"
+          style={{ height: "16rem" }}
+        >
+          <div className="d-flex flex-column align-items-center justify-content-center pt-3 pb-3">
+            <svg
+              className="mb-3 text-secondary"
+              width="32"
+              height="32"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 16"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+              />
+            </svg>
+            <p className="mb-2 text-muted small">
+              <strong>Click Untuk upload</strong> atau drag and drop
+            </p>
+            <p className="text-muted small">
+              SVG, PNG, JPG atau GIF (MAX. 3 Mb)
+            </p>
+          </div>
+        </label>
+      </div>
+
+      {formState?.image ? (
+        <div
+          className="d-flex align-items-center justify-content-center w-100 position-absolute bottom-0 z-0 border border-primary rounded transition-opacity"
+          style={{
+            height: "16rem",
+            opacity: "1",
+          }}
+          onMouseOver={(e) => (e.currentTarget.style.opacity = "0.5")}
+          onMouseOut={(e) => (e.currentTarget.style.opacity = "1")}
+        >
+          <img
+            src={formState?.imageUrl}
+            className="rounded h-100 w-100 p-2 object-fit-contain"
+            alt="image"
+          />
+        </div>
+      ) : (
+        ""
+      )}
+    </FileUploader>
   );
 };
 

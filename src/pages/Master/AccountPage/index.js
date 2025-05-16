@@ -69,17 +69,13 @@ const AccountPage = (props) => {
     setIsShowModalDelete(false);
   };
   const handleDelete = () => {
-    setIsShowModalDelete(false);
+    deleteAccount(formState?.id);
   };
   const handleAdd = () => {
-    // console.log("formState", formState);
     addAccount(formState);
-    // setIsShowModal(false);
   };
-  const handleEdit = (item) => {
-    setFormState(item);
-    setIsEdit(true);
-    setIsShowModal(true);
+  const handleUpdate = () => {
+    updateAccount(formState?.id, formState);
   };
   useEffect(() => {
     fetchAccounts();
@@ -267,6 +263,11 @@ const AccountPage = (props) => {
                                 Aksi
                               </button> */}
                             </th>
+                            <th>
+                              {/* <button class="table d-flex justify-content-between">
+                                Aksi
+                              </button> */}
+                            </th>
                           </tr>
                         </thead>
 
@@ -279,14 +280,20 @@ const AccountPage = (props) => {
                                     cursor: "loader",
                                   }}
                                 >
-                                  <td className="sort-name py-4">
+                                  <td className="sort-name py-3">
                                     {(currentPage - 1) * perPage + index + 1}.
                                   </td>
-                                  {[...Array(4)].map((_, i) => (
+                                  {[...Array(5)].map((_, i) => (
                                     <td key={i}>
                                       <div className="placeholder placeholder-lg w-75"></div>
                                     </td>
                                   ))}
+                                  <td>
+                                    <div className="placeholder placeholder-lg w-100"></div>
+                                  </td>
+                                  <td>
+                                    <div className="placeholder placeholder-lg w-75"></div>
+                                  </td>
                                 </tr>
                               ))
                             : paginatedItems?.map((account, index) => (
@@ -326,7 +333,7 @@ const AccountPage = (props) => {
                                         onClick={() => {
                                           setIsEdit(true);
                                           setFormState({
-                                            id: account?.id,
+                                            id: account?.uuid,
                                             name: account?.name,
                                             username: account?.username,
                                             role: account?.role,
@@ -366,7 +373,7 @@ const AccountPage = (props) => {
                                         aria-label="Create new report"
                                         onClick={() => {
                                           setFormState({
-                                            id: account?.id,
+                                            id: account?.uuid,
                                             name: account?.name,
                                             username: account?.username,
                                             role: account?.role,
@@ -515,7 +522,7 @@ const AccountPage = (props) => {
         formState={formState}
         setFormState={setFormState}
         handleAdd={handleAdd}
-        handleEdit={handleEdit}
+        handleUpdate={handleUpdate}
       />
       <ModalDelete
         labelModal={formState?.name}
