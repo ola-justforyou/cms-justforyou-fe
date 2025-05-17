@@ -99,7 +99,7 @@ const AccountPage = (props) => {
         <div class="container-xl">
           <div class="row g-2 align-items-center">
             <div class="col">
-              <div class="page-pretitle">Master Wilayah</div>
+              <div class="page-pretitle">Master Akun</div>
               <h2 class="page-title">Akun</h2>
             </div>
             <div class="col-auto ms-auto d-print-none">

@@ -6,6 +6,7 @@ import orderReducer from "./order";
 import regionReducer from "./regionReducer";
 import authReducer from "./authReducer";
 import accountReducer from "./accountReducer";
+import roleReducer from "./roleReducer";
 
 const rootReducer = combineReducers({
   waybill: waybillReducer,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   regions: regionReducer,
   auth: authReducer,
   accounts: accountReducer,
+  roles: roleReducer,
 });
 
 export default rootReducer;
