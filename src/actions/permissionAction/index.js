@@ -1,145 +1,145 @@
 import { BASE_URL } from "../../helpers/config";
 import authorizedAxios from "../../helpers/authorizedAxios";
 import { showToast } from "../../utils/helpers/ShowToast";
-export const SET_ACCOUNTS = "SET_ACCOUNTS";
-export const SET_ACCOUNT = "SET_ACCOUNT";
-export const SET_ACCOUNTS_LOADING = "SET_ACCOUNTS_LOADING";
-export const SET_ACCOUNTS_ERROR = "SET_ACCOUNTS_ERROR";
+export const SET_PERMISSIONS = "SET_PERMISSIONS";
+export const SET_PERMISSION = "SET_PERMISSION";
+export const SET_PERMISSIONS_LOADING = "SET_PERMISSIONS_LOADING";
+export const SET_PERMISSIONS_ERROR = "SET_PERMISSIONS_ERROR";
 
-export const fetchAccounts = (limit = 100, page = 1) => {
+export const fetchPermissions = () => {
   return async (dispatch) => {
-    dispatch({ type: SET_ACCOUNTS_LOADING, status: true });
+    dispatch({ type: SET_PERMISSIONS_LOADING, status: true });
 
     try {
       const response = await authorizedAxios.get(
-        "/users?limit=" + limit + "&page=" + page
+        "/permissions?limit=50&page=1"
       );
 
       if (response.status === 200 || response.status === 201) {
         dispatch({
-          type: SET_ACCOUNTS,
-          data: response?.data?.data,
+          type: SET_PERMISSIONS,
+          data: response?.data?.data?.data,
         });
       }
     } catch (error) {
       console.error("error", error);
       dispatch({
-        type: SET_ACCOUNTS_ERROR,
+        type: SET_PERMISSIONS_ERROR,
         error:
           error?.response?.data || "Terjadi kesalahan saat mengambil data.",
       });
     } finally {
-      dispatch({ type: SET_ACCOUNTS_LOADING, status: false });
+      dispatch({ type: SET_PERMISSIONS_LOADING, status: false });
     }
   };
 };
 
-export const getAccountById = (id) => {
+export const getPermissionById = (id) => {
   return async (dispatch) => {
-    dispatch({ type: SET_ACCOUNTS_LOADING, status: true });
+    dispatch({ type: SET_PERMISSIONS_LOADING, status: true });
 
     try {
-      const response = await authorizedAxios.get("/users/" + id);
+      const response = await authorizedAxios.get("/permissions/" + id);
 
       if (response.status === 200 || response.status === 201) {
         dispatch({
-          type: SET_ACCOUNT,
+          type: SET_PERMISSION,
           data: response.data,
         });
       }
     } catch (error) {
       console.error("error", error);
       dispatch({
-        type: SET_ACCOUNTS_ERROR,
+        type: SET_PERMISSIONS_ERROR,
         error:
           error?.response?.data || "Terjadi kesalahan saat mengambil data.",
       });
     } finally {
-      dispatch({ type: SET_ACCOUNTS_LOADING, status: false });
+      dispatch({ type: SET_PERMISSIONS_LOADING, status: false });
     }
   };
 };
 
-export const addAccount = (data) => {
+export const addPermission = (data) => {
   return async (dispatch) => {
-    dispatch({ type: SET_ACCOUNTS_LOADING, status: true });
+    dispatch({ type: SET_PERMISSIONS_LOADING, status: true });
 
     try {
       const response = await showToast(
-        authorizedAxios.post(`${BASE_URL}/users`, data),
+        authorizedAxios.post(`${BASE_URL}/permissions`, data),
         {
           loading: "Menyimpan data...",
-          success: "Data akun berhasil ditambahkan!",
+          success: "Data permission berhasil ditambahkan!",
           error: (err) => err?.message || "Gagal menyimpan data!",
         }
       );
       if (response.status === 200 || response.status === 201) {
-        dispatch(fetchAccounts());
+        dispatch(fetchPermissions());
       }
     } catch (error) {
       console.error("error", error);
       dispatch({
-        type: SET_ACCOUNTS_ERROR,
+        type: SET_PERMISSIONS_ERROR,
         error: error?.message || "Terjadi kesalahan.",
       });
     } finally {
-      dispatch({ type: SET_ACCOUNTS_LOADING, status: false });
+      dispatch({ type: SET_PERMISSIONS_LOADING, status: false });
     }
   };
 };
 
-export const updateAccount = (id, data) => {
+export const updatePermission = (id, data) => {
   return async (dispatch) => {
-    dispatch({ type: SET_ACCOUNTS_LOADING, status: true });
+    dispatch({ type: SET_PERMISSIONS_LOADING, status: true });
 
     try {
       const response = await showToast(
-        authorizedAxios.put(`${BASE_URL}/users/${id}`, data),
+        authorizedAxios.put(`${BASE_URL}/permissions/${id}`, data),
         {
           loading: "Mengupdate data...",
-          success: "Data akun berhasil diupdate!",
+          success: "Data permission berhasil diupdate!",
           error: (err) => err?.message || "Gagal mengupdate data!",
         }
       );
       if (response.status === 200 || response.status === 201) {
-        dispatch(fetchAccounts());
+        dispatch(fetchPermissions());
       }
     } catch (error) {
       console.error("error", error);
       dispatch({
-        type: SET_ACCOUNTS_ERROR,
+        type: SET_PERMISSIONS_ERROR,
         error: error?.message || "Terjadi kesalahan.",
       });
     } finally {
-      dispatch({ type: SET_ACCOUNTS_LOADING, status: false });
+      dispatch({ type: SET_PERMISSIONS_LOADING, status: false });
     }
   };
 };
 
-export const deleteAccount = (id) => {
+export const deletePermission = (id) => {
   return async (dispatch) => {
-    dispatch({ type: SET_ACCOUNTS_LOADING, status: true });
+    dispatch({ type: SET_PERMISSIONS_LOADING, status: true });
 
     try {
       const response = await showToast(
-        authorizedAxios.delete(`${BASE_URL}/users/${id}`),
+        authorizedAxios.delete(`${BASE_URL}/permissions/${id}`),
         {
           loading: "Menghapus data...",
-          success: "Data akun berhasil dihapus!",
+          success: "Data permission berhasil dihapus!",
           error: (err) => err?.message || "Gagal menghapus data!",
         }
       );
       if (response.status === 200 || response.status === 201) {
-        dispatch(fetchAccounts());
+        dispatch(fetchPermissions());
       }
     } catch (error) {
       console.error("error", error);
       dispatch({
-        type: SET_ACCOUNTS_ERROR,
+        type: SET_PERMISSIONS_ERROR,
         error: error?.message || "Terjadi kesalahan.",
       });
     } finally {
-      dispatch({ type: SET_ACCOUNTS_LOADING, status: false });
+      dispatch({ type: SET_PERMISSIONS_LOADING, status: false });
     }
   };
 };

@@ -3,7 +3,7 @@ import MultiSelect from "react-select";
 import { FileUploader } from "react-drag-drop-files";
 import { fileToBase64 } from "../../../../utils/helpers/fileToBase64";
 
-const FormRole = (props) => {
+const FormPermission = (props) => {
   const {
     isShowModal,
     isEdit,
@@ -33,16 +33,21 @@ const FormRole = (props) => {
       className="modal modal-blur fade "
       id="modal-form"
       tabindex="-1"
-      role="dialog"
+      permission="dialog"
       aria-hidden="false"
       style={{
         backgroundColor: "rgba(0, 0, 0, 0.3)",
       }}
     >
-      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div
+        class="modal-dialog modal-dialog-centered modal-lg"
+        permission="document"
+      >
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Master Role {!isEdit ? "Baru" : "Edit"}</h5>
+            <h5 class="modal-title">
+              Master Permission {!isEdit ? "Baru" : "Edit"}
+            </h5>
             <button
               type="button"
               class="btn-close"
@@ -269,7 +274,7 @@ const FormRole = (props) => {
                 </div>
               </div>
               <div className="col-lg-12">
-                <label className="form-label">Role</label>
+                <label className="form-label">Permission</label>
                 <div className="mb-3 input-icon">
                   <span
                     className="input-icon-addon"
@@ -297,7 +302,7 @@ const FormRole = (props) => {
                   <MultiSelect
                     isMulti
                     options={options || []}
-                    name="roles"
+                    name="permissions"
                     className="form-select p-0"
                     styles={{
                       control: (base) => ({
@@ -336,14 +341,14 @@ const FormRole = (props) => {
                         color: "#90a4ae", // muted blue-gray
                       }),
                     }}
-                    value={formState.role || []}
+                    value={formState.permission || []}
                     onChange={(selectedOptions) => {
                       setFormState({
                         ...formState,
-                        role: selectedOptions,
+                        permission: selectedOptions,
                       });
                     }}
-                    placeholder="-- Pilih Role --"
+                    placeholder="-- Pilih Permission --"
                   />
                 </div>
               </div>
@@ -533,4 +538,4 @@ const DragDropFile = (props) => {
   );
 };
 
-export default FormRole;
+export default FormPermission;

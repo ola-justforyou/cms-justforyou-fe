@@ -6,17 +6,19 @@ export const SET_ROLE = "SET_ROLE";
 export const SET_ROLES_LOADING = "SET_ROLES_LOADING";
 export const SET_ROLES_ERROR = "SET_ROLES_ERROR";
 
-export const fetchRoles = () => {
+export const fetchRoles = (limit = 100, page = 1) => {
   return async (dispatch) => {
     dispatch({ type: SET_ROLES_LOADING, status: true });
 
     try {
-      const response = await authorizedAxios.get("/roles?limit=50&page=1");
+      const response = await authorizedAxios.get(
+        "/roles?limit=" + limit + "&page=" + page
+      );
 
       if (response.status === 200 || response.status === 201) {
         dispatch({
           type: SET_ROLES,
-          data: response?.data?.data?.data,
+          data: response?.data?.data,
         });
       }
     } catch (error) {

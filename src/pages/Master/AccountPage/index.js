@@ -21,10 +21,10 @@ const AccountPage = (props) => {
     addAccount,
     updateAccount,
     deleteAccount,
+    total_data,
   } = props;
-  const [perPage, setPerPage] = useState(20);
+  const [perPage, setPerPage] = useState(100);
   const [currentPage, setCurrentPage] = useState(1);
-
   const handlePerPageChange = (value) => {
     setPerPage(value);
     setCurrentPage(1);
@@ -43,14 +43,11 @@ const AccountPage = (props) => {
   const [isShowModalDelete, setIsShowModalDelete] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [filterText, setFilterText] = useState("");
-  const [items, setItems] = useState(accounts);
+  const [items, setItems] = useState(accounts || []);
   const [formState, setFormState] = useState(initialState);
 
-  const totalPages = Math.ceil(items?.length / perPage);
-  const paginatedItems = items?.slice(
-    (currentPage - 1) * perPage,
-    currentPage * perPage
-  );
+  const totalPages = Math.ceil(total_data / perPage) || 1;
+  const paginatedItems = items;
   const openModal = () => {
     setFormState(initialState);
     setIsShowModal(true);
@@ -78,8 +75,8 @@ const AccountPage = (props) => {
     updateAccount(formState?.id, formState);
   };
   useEffect(() => {
-    fetchAccounts();
-  }, []);
+    fetchAccounts(perPage, currentPage);
+  }, [perPage, currentPage]);
   useEffect(() => {
     if (accounts) {
       const filteredItems = accounts?.filter((item) => {
@@ -425,7 +422,7 @@ const AccountPage = (props) => {
                           <span>records</span>
                         </button>
                         <div className="dropdown-menu">
-                          {[10, 20, 50, 100]?.map((value) => (
+                          {[50, 100, 250]?.map((value) => (
                             <button
                               key={value}
                               className="dropdown-item"
@@ -435,6 +432,12 @@ const AccountPage = (props) => {
                             </button>
                           ))}
                         </div>
+                      </div>
+                      <div className="d-flex ">
+                        <p class="ms-2 my-auto text-secondary">
+                          {paginatedItems?.length} dari{" "}
+                          <span>{total_data}</span> <span>data</span>
+                        </p>
                       </div>
 
                       <ul className="pagination m-0 ms-auto">
@@ -530,14 +533,14 @@ const AccountPage = (props) => {
         closeModal={closeModalDelete}
         handleDelete={handleDelete}
       />
-      {/* <OverlayLoading isShow={isLoading} /> */}
     </div>
   );
 };
 
 const mapStateToProps = (state) => ({
-  account: state?.accounts?.data,
-  accounts: state?.accounts?.datas,
+  account: state?.accounts?.data?.data,
+  accounts: state?.accounts?.datas?.data || [],
+  total_data: state?.accounts?.datas?.total,
   isLoading: state?.accounts?.loading,
 });
 

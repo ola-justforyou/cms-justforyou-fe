@@ -21,10 +21,10 @@ const RolePage = (props) => {
     addRole,
     updateRole,
     deleteRole,
+    total_data,
   } = props;
-  const [perPage, setPerPage] = useState(20);
+  const [perPage, setPerPage] = useState(100);
   const [currentPage, setCurrentPage] = useState(1);
-
   const handlePerPageChange = (value) => {
     setPerPage(value);
     setCurrentPage(1);
@@ -46,11 +46,8 @@ const RolePage = (props) => {
   const [items, setItems] = useState(roles || []);
   const [formState, setFormState] = useState(initialState);
 
-  const totalPages = Math.ceil(items?.length / perPage);
-  const paginatedItems = items?.slice(
-    (currentPage - 1) * perPage,
-    currentPage * perPage
-  );
+  const totalPages = Math.ceil(total_data / perPage) || 1;
+  const paginatedItems = items;
   const openModal = () => {
     setFormState(initialState);
     setIsShowModal(true);
@@ -77,9 +74,10 @@ const RolePage = (props) => {
   const handleUpdate = () => {
     updateRole(formState?.id, formState);
   };
+
   useEffect(() => {
-    fetchRoles();
-  }, []);
+    fetchRoles(perPage, currentPage);
+  }, [perPage, currentPage]);
   useEffect(() => {
     if (roles) {
       const filteredItems = roles?.filter((item) => {
@@ -258,16 +256,8 @@ const RolePage = (props) => {
                               </button>
                             </th>
 
-                            <th>
-                              {/* <button class="table d-flex justify-content-between">
-                                Aksi
-                              </button> */}
-                            </th>
-                            <th>
-                              {/* <button class="table d-flex justify-content-between">
-                                Aksi
-                              </button> */}
-                            </th>
+                            <th></th>
+                            <th></th>
                           </tr>
                         </thead>
 
@@ -425,7 +415,7 @@ const RolePage = (props) => {
                           <span>records</span>
                         </button>
                         <div className="dropdown-menu">
-                          {[10, 20, 50, 100]?.map((value) => (
+                          {[50, 100, 250]?.map((value) => (
                             <button
                               key={value}
                               className="dropdown-item"
@@ -435,6 +425,12 @@ const RolePage = (props) => {
                             </button>
                           ))}
                         </div>
+                      </div>
+                      <div className="d-flex ">
+                        <p class="ms-2 my-auto text-secondary">
+                          {paginatedItems?.length} dari{" "}
+                          <span>{total_data}</span> <span>data</span>
+                        </p>
                       </div>
 
                       <ul className="pagination m-0 ms-auto">
@@ -536,8 +532,9 @@ const RolePage = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  role: state?.roles?.data,
-  roles: state?.roles?.datas,
+  role: state?.roles?.data?.data,
+  roles: state?.roles?.datas?.data || [],
+  total_data: state?.roles?.datas?.total,
   isLoading: state?.roles?.loading,
 });
 
