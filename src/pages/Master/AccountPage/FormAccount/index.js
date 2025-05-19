@@ -21,11 +21,16 @@ const FormAccount = (props) => {
   }, []);
 
   const options = [
-    { value: "chocolate", label: "Chocolate" },
-    { value: "strawberry", label: "Strawberry" },
-    { value: "vanilla", label: "Vanilla" },
+    { id: "1", name: "Chocolate" },
+    { id: "2", name: "Strawberry" },
+    { id: "3", name: "Vanilla" },
   ];
+  // const optionss = ["dsajdsa", "idsjaidjsa"];
 
+  const optionJadi = options.map((item) => {
+    return { value: item?.name, label: item?.name };
+  });
+  console.log(formState);
   return (
     <div
       className="modal modal-blur fade "
@@ -294,7 +299,7 @@ const FormAccount = (props) => {
                   </span>
                   <MultiSelect
                     isMulti
-                    options={options || []}
+                    options={optionJadi || []}
                     name="roles"
                     className="form-select p-0"
                     styles={{
@@ -334,11 +339,16 @@ const FormAccount = (props) => {
                         color: "#90a4ae", // muted blue-gray
                       }),
                     }}
-                    value={formState.role || []}
+                    value={formState.roles || []}
                     onChange={(selectedOptions) => {
+                      // const values = selectedOptions.map((item) => {
+                      //   return { value: item?.name, label: item?.name };
+                      // });
+                      console.log(selectedOptions);
+
                       setFormState({
                         ...formState,
-                        role: selectedOptions,
+                        roles: selectedOptions,
                       });
                     }}
                     placeholder="-- Pilih Role --"

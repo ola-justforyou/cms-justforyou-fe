@@ -34,7 +34,7 @@ const AccountPage = (props) => {
     id: "",
     username: "",
     name: "",
-    role: "admin",
+    roles: [],
     whatsapp: "",
     password: "",
     image: "",
