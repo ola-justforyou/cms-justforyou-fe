@@ -8,7 +8,7 @@ import authReducer from "./authReducer";
 import accountReducer from "./accountReducer";
 import roleReducer from "./roleReducer";
 import permissionReducer from "./permissionReducer";
-
+import invitationPackageReducer from "./invitationPackageReducer";
 const rootReducer = combineReducers({
   waybill: waybillReducer,
   products: productReducer,
@@ -18,6 +18,7 @@ const rootReducer = combineReducers({
   accounts: accountReducer,
   roles: roleReducer,
   permissions: permissionReducer,
+  invitationPackages: invitationPackageReducer,
 });
 
 export default rootReducer;

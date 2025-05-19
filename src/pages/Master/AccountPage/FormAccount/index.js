@@ -26,8 +26,6 @@ const FormAccount = (props) => {
     { value: "vanilla", label: "Vanilla" },
   ];
 
-  console.log("formState", formState);
-
   return (
     <div
       className="modal modal-blur fade "
