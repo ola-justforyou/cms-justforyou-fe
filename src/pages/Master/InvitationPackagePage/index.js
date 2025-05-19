@@ -6,9 +6,11 @@ import {
   updateInvitationPackage,
   deleteInvitationPackage,
 } from "../../../actions/invitationPackageAction";
+import { fetchInvitationServices } from "../../../actions/invitationServiceAction";
 import { connect } from "react-redux";
 import ModalDelete from "../../../components/Modals/ModalDelete";
 import FormInvitationPackage from "./FormInvitationPackage";
+import FormServicePicker from "./FormServicePicker";
 import UserAvatar from "../../../components/UserAvatar";
 import { formatIDR } from "../../../utils/helpers/formatIDR";
 
@@ -22,7 +24,10 @@ const InvitationPackagePage = (props) => {
     addInvitationPackage,
     updateInvitationPackage,
     deleteInvitationPackage,
+    fetchInvitationServices,
     total_data,
+    invitationServices,
+    isLoadingService,
   } = props;
   const [perPage, setPerPage] = useState(100);
   const [currentPage, setCurrentPage] = useState(1);
@@ -35,6 +40,7 @@ const InvitationPackagePage = (props) => {
     id: "",
     name: "",
     price: 0,
+    services: [],
   };
   const [isShowModal, setIsShowModal] = useState(false);
   const [isShowModalDelete, setIsShowModalDelete] = useState(false);
@@ -70,6 +76,45 @@ const InvitationPackagePage = (props) => {
   };
   const handleUpdate = () => {
     updateInvitationPackage(formState?.id, formState);
+  };
+  const handleCheckboxChange = (e, id, datas) => {
+    const isChecked = e.target.checked;
+    const values = {
+      name: datas?.name,
+      id: datas?.id,
+      detail: datas?.detail,
+    };
+    console.log(isChecked, "isChecked");
+
+    if (isChecked) {
+      setFormState((prevFormState) => ({
+        ...prevFormState,
+        services: [...prevFormState.services, values],
+      }));
+    } else {
+      setFormState((prevFormState) => ({
+        ...prevFormState,
+        services: prevFormState.services.filter((item) => item?.id !== id),
+      }));
+    }
+  };
+  const handleCheckAll = (e) => {
+    const isChecked = e.target.checked;
+    if (isChecked) {
+      setFormState((prevFormState) => ({
+        ...prevFormState,
+        services: invitationServices?.map((item) => ({
+          name: item?.name,
+          id: item?.id,
+          detail: item?.detail,
+        })),
+      }));
+    } else {
+      setFormState((prevFormState) => ({
+        ...prevFormState,
+        services: [],
+      }));
+    }
   };
   useEffect(() => {
     fetchInvitationPackages(perPage, currentPage);
@@ -273,12 +318,6 @@ const InvitationPackagePage = (props) => {
                                       {(currentPage - 1) * perPage + index + 1}.
                                     </td>
                                     <td className="sort-city">
-                                      {/* <UserAvatar
-                                        fullName="Ari Purnomo"
-                                        imageUrl="https://i.pravatar.cc/300"
-                                        size="xs"
-                                        className="me-2"
-                                      /> */}
                                       {invitationPackage?.name}
                                     </td>
                                     <td className="sort-name">
@@ -291,6 +330,55 @@ const InvitationPackagePage = (props) => {
                                     </td>
                                     <td>
                                       <div class="btn-list flex-nowrap justify-content-center">
+                                        <a
+                                          href="#"
+                                          class="btn btn-1 bg-success-lt"
+                                          data-bs-toggle="modal"
+                                          data-bs-target="#modal-form-picker"
+                                          aria-label="Create new report"
+                                          onClick={() => {
+                                            setIsEdit(true);
+                                            // setFormState({
+                                            //   id: invitationPackage?.uuid,
+                                            //   name: invitationPackage?.name,
+                                            //   price: invitationPackage?.price,
+                                            // });
+                                            setFormState((prevFormState) => ({
+                                              ...prevFormState,
+                                              id: invitationPackage?.uuid,
+                                              name: invitationPackage?.name,
+                                              price: invitationPackage?.price,
+                                              services:
+                                                invitationPackage?.services ||
+                                                [],
+                                            }));
+                                          }}
+                                        >
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-table-plus"
+                                          >
+                                            <path
+                                              stroke="none"
+                                              d="M0 0h24v24H0z"
+                                              fill="none"
+                                            />
+                                            <path d="M12.5 21h-7.5a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v7.5" />
+                                            <path d="M3 10h18" />
+                                            <path d="M10 3v18" />
+                                            <path d="M16 19h6" />
+                                            <path d="M19 16v6" />
+                                          </svg>
+                                          Layanan{" "}
+                                        </a>
                                         <a
                                           href="#"
                                           class="btn btn-1 bg-secondary-lt"
@@ -495,6 +583,20 @@ const InvitationPackagePage = (props) => {
         handleUpdate={handleUpdate}
         formatIDR={formatIDR}
       />
+      <FormServicePicker
+        isShowModal={isShowModal}
+        isEdit={isEdit}
+        closeModal={closeModal}
+        formState={formState}
+        setFormState={setFormState}
+        handleAdd={handleAdd}
+        handleUpdate={handleUpdate}
+        fetchInvitationServices={fetchInvitationServices}
+        invitationServices={invitationServices}
+        isLoadingService={isLoadingService}
+        handleCheckboxChange={handleCheckboxChange}
+        handleCheckAll={handleCheckAll}
+      />
       <ModalDelete
         labelModal={formState?.name}
         isShowModal={isShowModalDelete}
@@ -510,6 +612,10 @@ const mapStateToProps = (state) => ({
   invitationPackages: state?.invitationPackages?.datas?.data || [],
   total_data: state?.invitationPackages?.datas?.total,
   isLoading: state?.invitationPackages?.loading,
+  invitationService: state?.invitationServices?.data?.data,
+  invitationServices: state?.invitationServices?.datas?.data || [],
+  total_data_service: state?.invitationServices?.datas?.total,
+  isLoadingService: state?.invitationServices?.loading,
 });
 
 export default connect(mapStateToProps, {
@@ -518,4 +624,5 @@ export default connect(mapStateToProps, {
   addInvitationPackage,
   updateInvitationPackage,
   deleteInvitationPackage,
+  fetchInvitationServices,
 })(InvitationPackagePage);
