@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { logout } from "../../actions/authAction/loginAction";
+import UserAvatar from "../../components/UserAvatar";
 
 const Navbar = (props) => {
-  const { logout } = props;
+  const { logout, userProfile } = props;
 
   return (
     <header
-      class="navbar navbar-expand-md d-none d-lg-flex d-print-none bg-body shadow-none"
+      class="navbar navbar-expand-md d-none d-lg-flex d-print-none bug-body shadow-none"
       style={{}}
     >
       <div class="container-xl">
@@ -326,10 +327,15 @@ const Navbar = (props) => {
               data-bs-toggle="dropdown"
               aria-label="Open user menu"
             >
-              <span class="avatar avatar-sm"> </span>
+              <UserAvatar
+                fullName={userProfile?.name}
+                imageUrl={userProfile?.image_url}
+                size="sm"
+                className=""
+              />
               <div class="d-none d-xl-block ps-2">
-                <div>Paweł Kuna</div>
-                <div class="mt-1 small text-secondary">UI Designer</div>
+                <div>{userProfile?.name}</div>
+                <div class="mt-1 small text-secondary">{userProfile?.role}</div>
               </div>
             </a>
             <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">

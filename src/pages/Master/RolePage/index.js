@@ -6,10 +6,12 @@ import {
   updateRole,
   deleteRole,
 } from "../../../actions/roleAction";
+import { fetchPermissions } from "../../../actions/permissionAction";
 import { connect } from "react-redux";
 import ModalDelete from "../../../components/Modals/ModalDelete";
 import FormRole from "./FormRole";
 import UserAvatar from "../../../components/UserAvatar";
+import FormPermissionPicker from "./FormPermissionPicker";
 
 const RolePage = (props) => {
   const {
@@ -22,6 +24,10 @@ const RolePage = (props) => {
     updateRole,
     deleteRole,
     total_data,
+    fetchPermissions,
+    permissions,
+    isLoadingPermission,
+    permissionsss,
   } = props;
   const [perPage, setPerPage] = useState(100);
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,12 +38,8 @@ const RolePage = (props) => {
 
   const initialState = {
     id: "",
-    username: "",
     name: "",
-    role: "admin",
-    whatsapp: "",
-    password: "",
-    image: "",
+    permissions: [],
   };
   const [isShowModal, setIsShowModal] = useState(false);
   const [isShowModalDelete, setIsShowModalDelete] = useState(false);
@@ -73,6 +75,43 @@ const RolePage = (props) => {
   };
   const handleUpdate = () => {
     updateRole(formState?.id, formState);
+  };
+  const handleCheckboxChange = (e, id, datas) => {
+    const isChecked = e.target.checked;
+    const values = {
+      name: datas?.name,
+      id: datas?.id,
+    };
+    if (isChecked) {
+      setFormState((prevFormState) => ({
+        ...prevFormState,
+        permissions: [...prevFormState.permissions, values],
+      }));
+    } else {
+      setFormState((prevFormState) => ({
+        ...prevFormState,
+        permissions: prevFormState.permissions.filter(
+          (item) => item?.id !== id
+        ),
+      }));
+    }
+  };
+  const handleCheckAll = (e) => {
+    const isChecked = e.target.checked;
+    if (isChecked) {
+      setFormState((prevFormState) => ({
+        ...prevFormState,
+        permissions: permissions?.map((item) => ({
+          name: item?.name,
+          id: item?.id,
+        })),
+      }));
+    } else {
+      setFormState((prevFormState) => ({
+        ...prevFormState,
+        permissions: [],
+      }));
+    }
   };
 
   useEffect(() => {
@@ -219,34 +258,10 @@ const RolePage = (props) => {
                                 class="table-sort d-flex justify-content-between"
                                 data-sort="sort-city"
                               >
-                                Nama lengkap
-                              </button>
-                            </th>
-                            <th>
-                              <button
-                                class="table-sort d-flex justify-content-between"
-                                data-sort="sort-name"
-                              >
-                                Username
-                              </button>
-                            </th>
-
-                            <th>
-                              <button
-                                class="table-sort d-flex justify-content-between"
-                                data-sort="sort-city"
-                              >
                                 Role
                               </button>
                             </th>
-                            <th>
-                              <button
-                                class="table-sort d-flex justify-content-between"
-                                data-sort="sort-city"
-                              >
-                                Whatsapp
-                              </button>
-                            </th>
+
                             <th>
                               <button
                                 class="table-sort d-flex justify-content-between"
@@ -273,7 +288,7 @@ const RolePage = (props) => {
                                   <td className="sort-name py-3">
                                     {(currentPage - 1) * perPage + index + 1}.
                                   </td>
-                                  {[...Array(5)].map((_, i) => (
+                                  {[...Array(2)].map((_, i) => (
                                     <td key={i}>
                                       <div className="placeholder placeholder-lg w-75"></div>
                                     </td>
@@ -291,22 +306,7 @@ const RolePage = (props) => {
                                   <td className="sort-name">
                                     {(currentPage - 1) * perPage + index + 1}.
                                   </td>
-                                  <td className="sort-city">
-                                    <UserAvatar
-                                      fullName="Ari Purnomo"
-                                      imageUrl="https://i.pravatar.cc/300"
-                                      size="xs"
-                                      className="me-2"
-                                    />
-                                    {role?.name}
-                                  </td>
-                                  <td className="sort-name">
-                                    {role?.username}
-                                  </td>
-                                  <td className="sort-city">{role?.role}</td>
-                                  <td className="sort-city">
-                                    {role?.whatsapp}
-                                  </td>
+                                  <td className="sort-city">{role?.name}</td>
                                   <td className="sort-status">
                                     <span className="badge bg-success-lt">
                                       Active
@@ -316,6 +316,48 @@ const RolePage = (props) => {
                                     <div class="btn-list flex-nowrap justify-content-center">
                                       <a
                                         href="#"
+                                        class="btn btn-1 bg-success-lt"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modal-form-picker"
+                                        aria-label="Create new report"
+                                        onClick={() => {
+                                          setIsEdit(true);
+                                          setFormState((prevFormState) => ({
+                                            ...prevFormState,
+                                            id: role?.id,
+                                            name: role?.name,
+                                            permissions:
+                                              role?.permissions || [],
+                                          }));
+                                        }}
+                                      >
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          width="24"
+                                          height="24"
+                                          viewBox="0 0 24 24"
+                                          fill="none"
+                                          stroke="currentColor"
+                                          stroke-width="2"
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          class="icon icon-tabler icons-tabler-outline icon-tabler-table-plus"
+                                        >
+                                          <path
+                                            stroke="none"
+                                            d="M0 0h24v24H0z"
+                                            fill="none"
+                                          />
+                                          <path d="M12.5 21h-7.5a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v7.5" />
+                                          <path d="M3 10h18" />
+                                          <path d="M10 3v18" />
+                                          <path d="M16 19h6" />
+                                          <path d="M19 16v6" />
+                                        </svg>
+                                        Permission
+                                      </a>
+                                      <a
+                                        href="#"
                                         class="btn btn-1 bg-secondary-lt"
                                         data-bs-toggle="modal"
                                         data-bs-target="#modal-form"
@@ -323,11 +365,10 @@ const RolePage = (props) => {
                                         onClick={() => {
                                           setIsEdit(true);
                                           setFormState({
-                                            id: role?.uuid,
+                                            id: role?.id,
                                             name: role?.name,
-                                            username: role?.username,
-                                            role: role?.role,
-                                            whatsapp: role?.whatsapp,
+                                            permissions:
+                                              role?.permissions || [],
                                           });
                                           setIsShowModal(true);
                                         }}
@@ -355,7 +396,7 @@ const RolePage = (props) => {
                                         </svg>{" "}
                                         Edit{" "}
                                       </a>
-                                      <a
+                                      {/* <a
                                         href="#"
                                         class="btn btn-1 bg-danger-lt"
                                         data-bs-toggle="modal"
@@ -363,11 +404,10 @@ const RolePage = (props) => {
                                         aria-label="Create new report"
                                         onClick={() => {
                                           setFormState({
-                                            id: role?.uuid,
+                                            id: role?.id,
                                             name: role?.name,
-                                            username: role?.username,
-                                            role: role?.role,
-                                            whatsapp: role?.whatsapp,
+                                            permissions:
+                                              role?.permissions || [],
                                           });
                                         }}
                                       >
@@ -395,7 +435,7 @@ const RolePage = (props) => {
                                           <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
                                         </svg>{" "}
                                         Hapus
-                                      </a>
+                                      </a> */}
                                     </div>
                                   </td>
                                 </tr>
@@ -520,6 +560,20 @@ const RolePage = (props) => {
         handleAdd={handleAdd}
         handleUpdate={handleUpdate}
       />
+      <FormPermissionPicker
+        isShowModal={isShowModal}
+        isEdit={isEdit}
+        closeModal={closeModal}
+        formState={formState}
+        setFormState={setFormState}
+        handleAdd={handleAdd}
+        handleUpdate={handleUpdate}
+        fetchPermissions={fetchPermissions}
+        permissions={permissions}
+        isLoadingPermission={isLoadingPermission}
+        handleCheckboxChange={handleCheckboxChange}
+        handleCheckAll={handleCheckAll}
+      />
       <ModalDelete
         labelModal={formState?.name}
         isShowModal={isShowModalDelete}
@@ -536,10 +590,13 @@ const mapStateToProps = (state) => ({
   roles: state?.roles?.datas?.data || [],
   total_data: state?.roles?.datas?.total,
   isLoading: state?.roles?.loading,
+  permissions: state?.permissions?.datas || [],
+  isLoadingPermission: state?.permissions?.loading,
 });
 
 export default connect(mapStateToProps, {
   fetchRoles,
+  fetchPermissions,
   getRoleById,
   addRole,
   updateRole,

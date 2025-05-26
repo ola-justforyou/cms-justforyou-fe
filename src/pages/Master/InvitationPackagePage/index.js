@@ -338,11 +338,6 @@ const InvitationPackagePage = (props) => {
                                           aria-label="Create new report"
                                           onClick={() => {
                                             setIsEdit(true);
-                                            // setFormState({
-                                            //   id: invitationPackage?.uuid,
-                                            //   name: invitationPackage?.name,
-                                            //   price: invitationPackage?.price,
-                                            // });
                                             setFormState((prevFormState) => ({
                                               ...prevFormState,
                                               id: invitationPackage?.uuid,

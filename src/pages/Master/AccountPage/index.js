@@ -34,10 +34,11 @@ const AccountPage = (props) => {
     id: "",
     username: "",
     name: "",
+    email: "",
     roles: [],
     whatsapp: "",
     password: "",
-    image: "",
+    image_url: "",
   };
   const [isShowModal, setIsShowModal] = useState(false);
   const [isShowModalDelete, setIsShowModalDelete] = useState(false);
@@ -207,13 +208,13 @@ const AccountPage = (props) => {
                           <tr>
                             <th>
                               <button
-                                class="table-sort d-flex justify-content-between"
+                                class="table-sort d-flex justify-content-between w-1"
                                 data-sort="sort-name"
                               >
                                 No
                               </button>
                             </th>
-                            <th>
+                            <th className="w-50">
                               <button
                                 class="table-sort d-flex justify-content-between"
                                 data-sort="sort-city"
@@ -229,13 +230,18 @@ const AccountPage = (props) => {
                                 Username
                               </button>
                             </th>
-
                             <th>
                               <button
                                 class="table-sort d-flex justify-content-between"
-                                data-sort="sort-city"
+                                data-sort="sort-name"
                               >
-                                Role
+                                Email
+                              </button>
+                            </th>
+
+                            <th className="w-100">
+                              <button class="table-sort d-flex justify-content-center">
+                                Roles
                               </button>
                             </th>
                             <th>
@@ -280,7 +286,7 @@ const AccountPage = (props) => {
                                   <td className="sort-name py-3">
                                     {(currentPage - 1) * perPage + index + 1}.
                                   </td>
-                                  {[...Array(5)].map((_, i) => (
+                                  {[...Array(6)].map((_, i) => (
                                     <td key={i}>
                                       <div className="placeholder placeholder-lg w-75"></div>
                                     </td>
@@ -300,8 +306,8 @@ const AccountPage = (props) => {
                                   </td>
                                   <td className="sort-city">
                                     <UserAvatar
-                                      fullName="Ari Purnomo"
-                                      imageUrl="https://i.pravatar.cc/300"
+                                      fullName={account?.name}
+                                      imageUrl={account?.image_url}
                                       size="xs"
                                       className="me-2"
                                     />
@@ -310,7 +316,26 @@ const AccountPage = (props) => {
                                   <td className="sort-name">
                                     {account?.username}
                                   </td>
-                                  <td className="sort-city">{account?.role}</td>
+                                  <td className="sort-name">
+                                    {account?.email}
+                                  </td>
+                                  <td className="sort-city">
+                                    <div className="d-flex flex-wrap gap-2 mt-2 justify-content-start">
+                                      {account?.roles.map((role) => (
+                                        <div
+                                          key={role.id}
+                                          className="d-flex align-items-center px-3 py-1 rounded-pill fw-bold"
+                                          style={{
+                                            backgroundColor: "#e3f2fd",
+                                            color: "#1976d2",
+                                            fontSize: "11px",
+                                          }}
+                                        >
+                                          {role.name}
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </td>
                                   <td className="sort-city">
                                     {account?.whatsapp}
                                   </td>
@@ -332,9 +357,18 @@ const AccountPage = (props) => {
                                           setFormState({
                                             id: account?.uuid,
                                             name: account?.name,
+                                            email: account?.email,
                                             username: account?.username,
-                                            role: account?.role,
+                                            roles: account?.roles?.map(
+                                              (item) => {
+                                                return {
+                                                  value: item.id,
+                                                  label: item.name,
+                                                };
+                                              }
+                                            ),
                                             whatsapp: account?.whatsapp,
+                                            image_url: account?.image_url,
                                           });
                                           setIsShowModal(true);
                                         }}
@@ -372,9 +406,18 @@ const AccountPage = (props) => {
                                           setFormState({
                                             id: account?.uuid,
                                             name: account?.name,
+                                            email: account?.email,
                                             username: account?.username,
-                                            role: account?.role,
+                                            roles: account?.roles?.map(
+                                              (item) => {
+                                                return {
+                                                  value: item.id,
+                                                  label: item.name,
+                                                };
+                                              }
+                                            ),
                                             whatsapp: account?.whatsapp,
+                                            image_url: account?.image_url,
                                           });
                                         }}
                                       >

@@ -22,7 +22,7 @@ const PermissionPage = (props) => {
     updatePermission,
     deletePermission,
   } = props;
-  const [perPage, setPerPage] = useState(20);
+  const [perPage, setPerPage] = useState(100);
   const [currentPage, setCurrentPage] = useState(1);
 
   const handlePerPageChange = (value) => {
@@ -221,32 +221,7 @@ const PermissionPage = (props) => {
                                 class="table-sort d-flex justify-content-between"
                                 data-sort="sort-city"
                               >
-                                Nama lengkap
-                              </button>
-                            </th>
-                            <th>
-                              <button
-                                class="table-sort d-flex justify-content-between"
-                                data-sort="sort-name"
-                              >
-                                Username
-                              </button>
-                            </th>
-
-                            <th>
-                              <button
-                                class="table-sort d-flex justify-content-between"
-                                data-sort="sort-city"
-                              >
-                                Permission
-                              </button>
-                            </th>
-                            <th>
-                              <button
-                                class="table-sort d-flex justify-content-between"
-                                data-sort="sort-city"
-                              >
-                                Whatsapp
+                                Nama Akses
                               </button>
                             </th>
                             <th>
@@ -283,7 +258,7 @@ const PermissionPage = (props) => {
                                   <td className="sort-name py-3">
                                     {(currentPage - 1) * perPage + index + 1}.
                                   </td>
-                                  {[...Array(5)].map((_, i) => (
+                                  {[...Array(3)].map((_, i) => (
                                     <td key={i}>
                                       <div className="placeholder placeholder-lg w-75"></div>
                                     </td>
@@ -302,22 +277,7 @@ const PermissionPage = (props) => {
                                     {(currentPage - 1) * perPage + index + 1}.
                                   </td>
                                   <td className="sort-city">
-                                    <UserAvatar
-                                      fullName="Ari Purnomo"
-                                      imageUrl="https://i.pravatar.cc/300"
-                                      size="xs"
-                                      className="me-2"
-                                    />
                                     {permission?.name}
-                                  </td>
-                                  <td className="sort-name">
-                                    {permission?.username}
-                                  </td>
-                                  <td className="sort-city">
-                                    {permission?.permission}
-                                  </td>
-                                  <td className="sort-city">
-                                    {permission?.whatsapp}
                                   </td>
                                   <td className="sort-status">
                                     <span className="badge bg-success-lt">
@@ -335,11 +295,8 @@ const PermissionPage = (props) => {
                                         onClick={() => {
                                           setIsEdit(true);
                                           setFormState({
-                                            id: permission?.uuid,
+                                            id: permission?.id,
                                             name: permission?.name,
-                                            username: permission?.username,
-                                            permission: permission?.permission,
-                                            whatsapp: permission?.whatsapp,
                                           });
                                           setIsShowModal(true);
                                         }}
@@ -367,7 +324,7 @@ const PermissionPage = (props) => {
                                         </svg>{" "}
                                         Edit{" "}
                                       </a>
-                                      <a
+                                      {/* <a
                                         href="#"
                                         class="btn btn-1 bg-danger-lt"
                                         data-bs-toggle="modal"
@@ -375,11 +332,8 @@ const PermissionPage = (props) => {
                                         aria-label="Create new report"
                                         onClick={() => {
                                           setFormState({
-                                            id: permission?.uuid,
+                                            id: permission?.id,
                                             name: permission?.name,
-                                            username: permission?.username,
-                                            permission: permission?.permission,
-                                            whatsapp: permission?.whatsapp,
                                           });
                                         }}
                                       >
@@ -407,7 +361,7 @@ const PermissionPage = (props) => {
                                           <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
                                         </svg>{" "}
                                         Hapus
-                                      </a>
+                                      </a> */}
                                     </div>
                                   </td>
                                 </tr>

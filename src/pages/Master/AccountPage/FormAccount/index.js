@@ -21,9 +21,9 @@ const FormAccount = (props) => {
   }, []);
 
   const options = [
-    { id: "1", name: "Chocolate" },
-    { id: "2", name: "Strawberry" },
-    { id: "3", name: "Vanilla" },
+    { id: "admin", name: "admin" },
+    { id: "superadmin", name: "superadmin" },
+    // { id: "3", name: "Vanilla" },
   ];
   // const optionss = ["dsajdsa", "idsjaidjsa"];
 
@@ -122,6 +122,42 @@ const FormAccount = (props) => {
                       setFormState((prev) => ({
                         ...prev,
                         username: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
+              </div>
+              <div class="col-lg-12">
+                <label class="form-label">Email</label>
+                <div class="mb-3 input-icon">
+                  <span class="input-icon-addon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="icon icon-tabler icons-tabler-outline icon-tabler-at"
+                    >
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                      <path d="M16 12v1.5a2.5 2.5 0 0 0 5 0v-1.5a9 9 0 1 0 -5.5 8.28" />
+                    </svg>
+                  </span>
+                  <input
+                    type="email"
+                    className="form-control"
+                    name="email"
+                    placeholder="email"
+                    value={formState?.email || ""}
+                    onChange={(e) =>
+                      setFormState((prev) => ({
+                        ...prev,
+                        email: e.target.value,
                       }))
                     }
                   />
@@ -339,13 +375,8 @@ const FormAccount = (props) => {
                         color: "#90a4ae", // muted blue-gray
                       }),
                     }}
-                    value={formState.roles || []}
+                    value={formState?.roles}
                     onChange={(selectedOptions) => {
-                      // const values = selectedOptions.map((item) => {
-                      //   return { value: item?.name, label: item?.name };
-                      // });
-                      console.log(selectedOptions);
-
                       setFormState({
                         ...formState,
                         roles: selectedOptions,
@@ -456,7 +487,8 @@ const FormAccount = (props) => {
 };
 const DragDropFile = (props) => {
   const { setFormState, formState } = props;
-  const fileTypes = ["JPG", "PNG", "GIF"];
+  const fileTypes = ["JPG", "JPEG", "PNG", "GIF"];
+  const BASE_URL_STORAGE = "http://localhost/justforyou-be/storage/app/public/";
 
   return (
     <FileUploader
@@ -518,7 +550,7 @@ const DragDropFile = (props) => {
         </label>
       </div>
 
-      {formState?.image ? (
+      {formState?.image_url || formState?.image || formState?.imageUrl ? (
         <div
           className="d-flex align-items-center justify-content-center w-100 position-absolute bottom-0 z-0 border border-primary rounded transition-opacity"
           style={{
@@ -529,7 +561,7 @@ const DragDropFile = (props) => {
           onMouseOut={(e) => (e.currentTarget.style.opacity = "1")}
         >
           <img
-            src={formState?.imageUrl}
+            src={formState?.imageUrl || BASE_URL_STORAGE + formState?.image_url}
             className="rounded h-100 w-100 p-2 object-fit-contain"
             alt="image"
           />

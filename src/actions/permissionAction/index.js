@@ -6,13 +6,13 @@ export const SET_PERMISSION = "SET_PERMISSION";
 export const SET_PERMISSIONS_LOADING = "SET_PERMISSIONS_LOADING";
 export const SET_PERMISSIONS_ERROR = "SET_PERMISSIONS_ERROR";
 
-export const fetchPermissions = () => {
+export const fetchPermissions = (limit = 200, page = 1) => {
   return async (dispatch) => {
     dispatch({ type: SET_PERMISSIONS_LOADING, status: true });
 
     try {
       const response = await authorizedAxios.get(
-        "/permissions?limit=50&page=1"
+        "/permissions?limit=" + limit + "&page=" + page
       );
 
       if (response.status === 200 || response.status === 201) {
